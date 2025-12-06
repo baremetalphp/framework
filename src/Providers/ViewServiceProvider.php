@@ -91,6 +91,15 @@ class ViewServiceProvider extends ServiceProvider
     {
         // Start from current working directory
         $dir = getcwd();
+
+        // If we're in a 'public' directory, go up one level to the project root
+        if (basename($dir) === 'public') {
+            $parent = dirname($dir);
+            // verify it looks like a project root
+            if (file_exists($parent .'/composer.json') || file_exists($parent .'/vendor/autoload.php') || is_dir($parent .'/resources')) {
+                return $parent;
+            }
+        }
         
         // Go up directories until we find composer.json, vendor/autoload.php, or resources/ directory
         $maxDepth = 10;
