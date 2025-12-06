@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+use Framework\Console\Application;
+
+require __DIR__ . '/vendor/autoload.php';
+
+// Bootstrap the application to load .env and config
+// This ensures console commands have access to environment variables and service providers
+if (file_exists(__DIR__ . '/bootstrap/app.php')) {
+    require __DIR__ . '/bootstrap/app.php';
+}
+
+
+$app = new Application();
+
+$app->run($argv);
