@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Framework\View\TemplateEngine;
-use Framework\View\View;
+use BareMetalPHP\View\TemplateEngine;
+use BareMetalPHP\View\View;
 use Tests\TestCase;
 
 class ViewTest extends TestCase
@@ -78,7 +78,7 @@ class ViewTest extends TestCase
         
         $response = View::make('welcome', ['name' => 'John']);
         
-        $this->assertInstanceOf(\Framework\Http\Response::class, $response);
+        $this->assertInstanceOf(\BareMetalPHP\Http\Response::class, $response);
         $this->assertStringContainsString('Hello John', $response->getBody());
     }
 

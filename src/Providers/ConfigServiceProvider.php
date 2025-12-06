@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Framework\Providers;
+namespace BareMetalPHP\Providers;
 
-use Framework\Support\Config;
-use Framework\Support\Env;
-use Framework\Support\ServiceProvider;
+use BareMetalPHP\Support\Config;
+use BareMetalPHP\Support\Env;
+use BareMetalPHP\Support\ServiceProvider;
 
 class ConfigServiceProvider extends ServiceProvider
 {

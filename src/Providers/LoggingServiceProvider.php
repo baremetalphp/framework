@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Providers;
+namespace BareMetalPHP\Providers;
 
-use Framework\Support\Log;
-use Framework\Support\ServiceProvider;
+use BareMetalPHP\Support\Log;
+use BareMetalPHP\Support\ServiceProvider;
 
 class LoggingServiceProvider extends ServiceProvider
 {

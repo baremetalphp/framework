@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use Framework\Console\Application;
+use BareMetalPHP\Console\Application;
 
 require __DIR__ . '/vendor/autoload.php';
 

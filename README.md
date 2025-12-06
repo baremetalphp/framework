@@ -67,8 +67,8 @@ my-app/
 3. **Create a route** (`routes/web.php`):
 
 ```php
-use Framework\Routing\Router;
-use Framework\Http\Response;
+use BareMetalPHP\Routing\Router;
+use BareMetalPHP\Http\Response;
 
 return function (Router $router): void {
     $router->get('/', function () {
@@ -84,14 +84,14 @@ return function (Router $router): void {
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use Framework\Application;
+use BareMetalPHP\Application;
 
 $app = new Application(__DIR__ . '/..');
 $app->registerProviders([
-    Framework\Providers\ConfigServiceProvider::class,
-    Framework\Providers\DatabaseServiceProvider::class,
-    Framework\Providers\RoutingServiceProvider::class,
-    Framework\Providers\ViewServiceProvider::class,
+    BareMetalPHP\Providers\ConfigServiceProvider::class,
+    BareMetalPHP\Providers\DatabaseServiceProvider::class,
+    BareMetalPHP\Providers\RoutingServiceProvider::class,
+    BareMetalPHP\Providers\ViewServiceProvider::class,
 ]);
 
 return $app;
@@ -119,7 +119,7 @@ $router->get('/users/{id}', [UserController::class, 'show']);
 ### Models
 
 ```php
-use Framework\Database\Model;
+use BareMetalPHP\Database\Model;
 
 class User extends Model
 {
@@ -140,7 +140,7 @@ $posts = $user->posts;
 ### Database Migrations
 
 ```php
-use Framework\Database\Migration;
+use BareMetalPHP\Database\Migration;
 
 class CreateUsersTable extends Migration
 {
@@ -164,7 +164,7 @@ class CreateUsersTable extends Migration
 ### Views
 
 ```php
-use Framework\View\View;
+use BareMetalPHP\View\View;
 
 return View::make('welcome', [
     'name' => 'World'

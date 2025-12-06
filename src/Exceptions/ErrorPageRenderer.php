@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Exceptions;
+namespace BareMetalPHP\Exceptions;
 
-use Framework\Application;
-use Framework\Http\Request;
+use BareMetalPHP\Application;
+use BareMetalPHP\Http\Request;
 use Throwable;
 
 class ErrorPageRenderer

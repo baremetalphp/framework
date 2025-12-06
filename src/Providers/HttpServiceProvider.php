@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Framework\Providers;
+namespace BareMetalPHP\Providers;
 
-use Framework\Application;
-use Framework\Http\Kernel;
-use Framework\Support\ServiceProvider;
+use BareMetalPHP\Application;
+use BareMetalPHP\Http\Kernel;
+use BareMetalPHP\Support\ServiceProvider;
 
 class HttpServiceProvider extends ServiceProvider
 {
@@ -15,7 +15,7 @@ class HttpServiceProvider extends ServiceProvider
         $this->app->bind(Kernel::class, function (Application $app) {
             return new Kernel(
                 $app,
-                $app->make(\Framework\Routing\Router::class)
+                $app->make(\BareMetalPHP\Routing\Router::class)
             );
         });
     }

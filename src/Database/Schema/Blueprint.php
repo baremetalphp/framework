@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Database\Schema;
+namespace BareMetalPHP\Database\Schema;
 
-use Framework\Database\Driver\DriverInterface;
+use BareMetalPHP\Database\Driver\DriverInterface;
 
 class Blueprint
 {

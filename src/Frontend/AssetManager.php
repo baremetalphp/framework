@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Frontend;
+namespace BareMetalPHP\Frontend;
 
-use Framework\Support\Config;
-use Framework\Support\Env;
+use BareMetalPHP\Support\Config;
+use BareMetalPHP\Support\Env;
 
 /**
  * Manages frontend assets with Vite integration

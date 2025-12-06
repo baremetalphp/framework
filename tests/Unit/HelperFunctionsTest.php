@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Framework\Application;
-use Framework\Http\Response;
-use Framework\Support\Config;
-use Framework\Support\Env;
+use BareMetalPHP\Application;
+use BareMetalPHP\Http\Response;
+use BareMetalPHP\Support\Config;
+use BareMetalPHP\Support\Env;
 use Tests\TestCase;
 
 class HelperFunctionsTest extends TestCase
@@ -118,8 +118,8 @@ class HelperFunctionsTest extends TestCase
         mkdir($viewPath, 0755, true);
         mkdir($cachePath, 0755, true);
         
-        \Framework\View\View::setBasePath($viewPath);
-        \Framework\View\View::setCachePath($cachePath);
+        \BareMetalPHP\View\View::setBasePath($viewPath);
+        \BareMetalPHP\View\View::setCachePath($cachePath);
         
         // Create a test view file
         file_put_contents($viewPath . '/test.php', 'Hello {{ $name }}');
@@ -158,9 +158,9 @@ class HelperFunctionsTest extends TestCase
     {
         Application::setInstance($this->app);
         
-        $router = new \Framework\Routing\Router($this->app);
+        $router = new \BareMetalPHP\Routing\Router($this->app);
         $router->get('/test/{id}', fn() => new Response('test'))->name('test');
-        $this->app->instance(\Framework\Routing\Router::class, $router);
+        $this->app->instance(\BareMetalPHP\Routing\Router::class, $router);
         
         $url = route('test', ['id' => 42]);
         

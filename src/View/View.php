@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\View;
+namespace BareMetalPHP\View;
 
-use Framework\Http\Response;
+use BareMetalPHP\Http\Response;
 
 class View
 {

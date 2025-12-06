@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Framework\Http\Request;
+use BareMetalPHP\Http\Request;
 use Tests\TestCase;
 
 class RequestTest extends TestCase

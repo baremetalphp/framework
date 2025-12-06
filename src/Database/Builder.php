@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Framework\Database;
+namespace BareMetalPHP\Database;
 
 use PDO;
-use Framework\Support\Collection;
-use Framework\Database\SqlBuilder;
+use BareMetalPHP\Support\Collection;
+use BareMetalPHP\Database\SqlBuilder;
 
 class Builder
 {

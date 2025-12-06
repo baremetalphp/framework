@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Database;
 
-use Framework\Database\Connection;
-use Framework\Database\ConnectionManager;
+use BareMetalPHP\Database\Connection;
+use BareMetalPHP\Database\ConnectionManager;
 use Tests\TestCase;
 
 class ConnectionManagerTest extends TestCase

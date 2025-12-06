@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Database;
+namespace BareMetalPHP\Database;
 
-use Framework\Database\Driver\DriverInterface;
+use BareMetalPHP\Database\Driver\DriverInterface;
 
 /**
  * Helper class for building common SQL patterns

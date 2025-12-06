@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Framework\Support\Config;
+use BareMetalPHP\Support\Config;
 use Tests\TestCase;
 
 class ConfigTest extends TestCase

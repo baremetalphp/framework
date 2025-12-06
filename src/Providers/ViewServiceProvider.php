@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Providers;
+namespace BareMetalPHP\Providers;
 
-use Framework\Support\ServiceProvider;
-use Framework\View\View;
+use BareMetalPHP\Support\ServiceProvider;
+use BareMetalPHP\View\View;
 
 class ViewServiceProvider extends ServiceProvider
 {

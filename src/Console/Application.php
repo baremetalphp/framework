@@ -1,5 +1,5 @@
 <?php
-namespace Framework\Console;
+namespace BareMetalPHP\Console;
 
 class Application
 {

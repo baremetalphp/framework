@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Framework\Providers;
+namespace BareMetalPHP\Providers;
 
-use Framework\Application;
-use Framework\Routing\Router;
-use Framework\Support\ServiceProvider;
+use BareMetalPHP\Application;
+use BareMetalPHP\Routing\Router;
+use BareMetalPHP\Support\ServiceProvider;
 
 class RoutingServiceProvider extends ServiceProvider
 {

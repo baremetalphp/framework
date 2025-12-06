@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Framework\Providers;
+namespace BareMetalPHP\Providers;
 
-use Framework\Frontend\AssetManager;
-use Framework\Frontend\SPAHelper;
-use Framework\Support\ServiceProvider;
+use BareMetalPHP\Frontend\AssetManager;
+use BareMetalPHP\Frontend\SPAHelper;
+use BareMetalPHP\Support\ServiceProvider;
 
 /**
  * Optional service provider for frontend framework integration

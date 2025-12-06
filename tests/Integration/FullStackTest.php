@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration;
 
-use Framework\Application;
-use Framework\Database\Connection;
-use Framework\Database\Model;
-use Framework\Http\Kernel;
-use Framework\Http\Request;
-use Framework\Routing\Router;
+use BareMetalPHP\Application;
+use BareMetalPHP\Database\Connection;
+use BareMetalPHP\Database\Model;
+use BareMetalPHP\Http\Kernel;
+use BareMetalPHP\Http\Request;
+use BareMetalPHP\Routing\Router;
 use Tests\TestCase;
 use Tests\Feature\TestKernel;
 
@@ -39,9 +39,9 @@ class FullStackTest extends TestCase
         $router->get('/users/{id}', function(int $id) {
             $user = TestUser::find($id);
             if (!$user) {
-                return new \Framework\Http\Response('Not Found', 404);
+                return new \BareMetalPHP\Http\Response('Not Found', 404);
             }
-            return new \Framework\Http\Response(json_encode($user->toArray()), 200, [
+            return new \BareMetalPHP\Http\Response(json_encode($user->toArray()), 200, [
                 'Content-Type' => 'application/json'
             ]);
         });
@@ -68,7 +68,7 @@ class FullStackTest extends TestCase
     {
         // This test doesn't need database, but we inherit from TestCase
         // which tries to clean up. Let's skip database cleanup for this test
-        $provider = new class($this->app) extends \Framework\Support\ServiceProvider {
+        $provider = new class($this->app) extends \BareMetalPHP\Support\ServiceProvider {
             public function register(): void
             {
                 $this->app->singleton('test.service', fn() => 'test-value');

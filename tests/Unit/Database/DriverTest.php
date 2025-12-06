@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Database;
 
-use Framework\Database\Driver\SqliteDriver;
-use Framework\Database\Driver\MysqlDriver;
-use Framework\Database\Driver\PostgresDriver;
+use BareMetalPHP\Database\Driver\SqliteDriver;
+use BareMetalPHP\Database\Driver\MysqlDriver;
+use BareMetalPHP\Database\Driver\PostgresDriver;
 use Tests\TestCase;
 
 class DriverTest extends TestCase

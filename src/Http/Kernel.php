@@ -1,12 +1,12 @@
 <?php
 
-namespace Framework\Http;
+namespace BareMetalPHP\Http;
 
-use Framework\Routing\Router;
-use Framework\Application;
-use Framework\Http\Request;
-use Framework\Http\Response;
-use Framework\Exceptions\ErrorPageRenderer;
+use BareMetalPHP\Routing\Router;
+use BareMetalPHP\Application;
+use BareMetalPHP\Http\Request;
+use BareMetalPHP\Http\Response;
+use BareMetalPHP\Exceptions\ErrorPageRenderer;
 class Kernel 
 {
     public function __construct(protected Application $app, protected Router $router)

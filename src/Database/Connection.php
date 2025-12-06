@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Database;
+namespace BareMetalPHP\Database;
 
-use Framework\Database\Driver\DriverInterface;
-use Framework\Database\Driver\SqliteDriver;
+use BareMetalPHP\Database\Driver\DriverInterface;
+use BareMetalPHP\Database\Driver\SqliteDriver;
 use PDO;
 use PDOException;
 
@@ -65,9 +65,9 @@ class Connection
         if (str_starts_with($dsn, 'sqlite:')) {
             $this->driver = new SqliteDriver();
         } elseif (str_starts_with($dsn, 'mysql:')) {
-            $this->driver = new \Framework\Database\Driver\MysqlDriver();
+            $this->driver = new \BareMetalPHP\Database\Driver\MysqlDriver();
         } elseif (str_starts_with($dsn, 'pgsql:')) {
-            $this->driver = new \Framework\Database\Driver\PostgresDriver();
+            $this->driver = new \BareMetalPHP\Database\Driver\PostgresDriver();
         } else {
             // Default to SQLite
             $this->driver = new SqliteDriver();

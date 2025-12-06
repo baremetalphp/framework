@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Framework\Support\Env;
+use BareMetalPHP\Support\Env;
 use Tests\TestCase;
 
 class EnvTest extends TestCase
@@ -17,7 +17,7 @@ class EnvTest extends TestCase
         $this->envFile = sys_get_temp_dir() . '/.env.test';
         
         // Reset Env loaded state
-        $reflection = new \ReflectionClass(\Framework\Support\Env::class);
+        $reflection = new \ReflectionClass(\BareMetalPHP\Support\Env::class);
         $property = $reflection->getProperty('loaded');
         $property->setAccessible(true);
         $property->setValue(null, false);

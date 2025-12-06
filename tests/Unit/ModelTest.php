@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Framework\Database\Connection;
-use Framework\Database\Model;
-use Framework\Support\Collection;
+use BareMetalPHP\Database\Connection;
+use BareMetalPHP\Database\Model;
+use BareMetalPHP\Support\Collection;
 use Tests\TestCase;
 
 class ModelTest extends TestCase

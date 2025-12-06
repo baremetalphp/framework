@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Framework\Routing;
+namespace BareMetalPHP\Routing;
 
-use Framework\Http\Request;
-use Framework\Http\Response;
-use Framework\Application;
-use Framework\Database\Model;
+use BareMetalPHP\Http\Request;
+use BareMetalPHP\Http\Response;
+use BareMetalPHP\Application;
+use BareMetalPHP\Database\Model;
 use ReflectionFunction;
 use ReflectionMethod;
 

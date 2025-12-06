@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework;
+namespace BareMetalPHP;
 
-use Framework\Support\ServiceProvider;
+use BareMetalPHP\Support\ServiceProvider;
 use ReflectionClass;
 use ReflectionParameter;
 

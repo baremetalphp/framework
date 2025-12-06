@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Support;
+namespace BareMetalPHP\Support;
 
-use Framework\Application;
+use BareMetalPHP\Application;
 
 abstract class ServiceProvider
 {

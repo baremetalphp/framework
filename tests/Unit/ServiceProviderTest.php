@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Framework\Application;
-use Framework\Support\ServiceProvider;
+use BareMetalPHP\Application;
+use BareMetalPHP\Support\ServiceProvider;
 use Tests\TestCase;
 
 class ServiceProviderTest extends TestCase

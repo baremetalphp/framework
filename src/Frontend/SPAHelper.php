@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Frontend;
+namespace BareMetalPHP\Frontend;
 
-use Framework\Http\Response;
-use Framework\Support\Config;
+use BareMetalPHP\Http\Response;
+use BareMetalPHP\Support\Config;
 
 /**
  * Helper for Single Page Application (SPA) responses

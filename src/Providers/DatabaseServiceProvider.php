@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Framework\Providers;
+namespace BareMetalPHP\Providers;
 
-use Framework\Database\Connection;
-use Framework\Database\ConnectionManager;
-use Framework\Database\Model as BaseModel;
-use Framework\Support\ServiceProvider;
-use Framework\Support\Config;
+use BareMetalPHP\Database\Connection;
+use BareMetalPHP\Database\ConnectionManager;
+use BareMetalPHP\Database\Model as BaseModel;
+use BareMetalPHP\Support\ServiceProvider;
+use BareMetalPHP\Support\Config;
 
 class DatabaseServiceProvider extends ServiceProvider
 {

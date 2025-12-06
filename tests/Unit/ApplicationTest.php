@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Framework\Application;
+use BareMetalPHP\Application;
 use Tests\TestCase;
 
 class ApplicationTest extends TestCase
@@ -72,7 +72,7 @@ class ApplicationTest extends TestCase
 
     public function testCanRegisterServiceProviders(): void
     {
-        $provider = new class($this->app) extends \Framework\Support\ServiceProvider {
+        $provider = new class($this->app) extends \BareMetalPHP\Support\ServiceProvider {
             public function register(): void
             {
                 $this->app->bind('test.provider', fn() => 'test');

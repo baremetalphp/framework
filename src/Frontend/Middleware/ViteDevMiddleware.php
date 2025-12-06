@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Frontend\Middleware;
+namespace BareMetalPHP\Frontend\Middleware;
 
-use Framework\Http\Request;
-use Framework\Http\Response;
+use BareMetalPHP\Http\Request;
+use BareMetalPHP\Http\Response;
 
 /**
  * Middleware to proxy Vite dev server requests

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Console\Commands;
+namespace BareMetalPHP\Console\Commands;
 
 class InstallFrontendCommand
 {

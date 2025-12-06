@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Framework\Database;
+namespace BareMetalPHP\Database;
 
-use Framework\Application;
-use Framework\Database\ConnectionManager;
+use BareMetalPHP\Application;
+use BareMetalPHP\Database\ConnectionManager;
 use PDO;
 use ArrayAccess;
-use Framework\Support\Collection;
+use BareMetalPHP\Support\Collection;
 
 abstract class Model implements ArrayAccess
 {
@@ -87,7 +87,7 @@ abstract class Model implements ArrayAccess
             $pdoProperty->setValue($connection, static::$pdo);
             
             // Set SQLite driver as default fallback
-            $driver = new \Framework\Database\Driver\SqliteDriver();
+            $driver = new \BareMetalPHP\Database\Driver\SqliteDriver();
             $driverProperty = $reflection->getProperty('driver');
             $driverProperty->setAccessible(true);
             $driverProperty->setValue($connection, $driver);
@@ -340,7 +340,7 @@ abstract class Model implements ArrayAccess
     /**
      * Prepare attributes using driver-specific value preparation
      */
-    protected function prepareAttributes(array $attributes, \Framework\Database\Driver\DriverInterface $driver): array
+    protected function prepareAttributes(array $attributes, \BareMetalPHP\Database\Driver\DriverInterface $driver): array
     {
         $prepared = [];
         foreach ($attributes as $key => $value) {
@@ -352,7 +352,7 @@ abstract class Model implements ArrayAccess
     /**
      * Quote multiple identifiers at once
      */
-    protected function quoteIdentifiers(array $identifiers, \Framework\Database\Driver\DriverInterface $driver): array
+    protected function quoteIdentifiers(array $identifiers, \BareMetalPHP\Database\Driver\DriverInterface $driver): array
     {
         return array_map(fn ($id) => $driver->quoteIdentifier($id), $identifiers);
     }
@@ -513,7 +513,7 @@ abstract class Model implements ArrayAccess
      * @param string $parentKey Local key on this model
      * @param string $relatedKey Local key on related model
      * 
-     * @return \Framework\Database\Relations\BelongsToMany
+     * @return \BareMetalPHP\Database\Relations\BelongsToMany
      */
     protected function belongsToMany(
         string $related,
@@ -522,7 +522,7 @@ abstract class Model implements ArrayAccess
         ?string $relatedPivotKey = null,
         string $parentKey = 'id',
         string $relatedKey = 'id'
-    ): \Framework\Database\Relations\BelongsToMany {
+    ): \BareMetalPHP\Database\Relations\BelongsToMany {
         // Auto-generate pivot table name if not provided (Laravel convention: alphabetically sorted model names)
         if ($pivotTable === null) {
             $tables = [static::$table, (new $related)::$table];
@@ -540,7 +540,7 @@ abstract class Model implements ArrayAccess
             $relatedPivotKey = $relatedModel->getModelForeignKeyName();
         }
 
-        return new \Framework\Database\Relations\BelongsToMany(
+        return new \BareMetalPHP\Database\Relations\BelongsToMany(
             $this,
             $related,
             $pivotTable,
@@ -672,7 +672,7 @@ abstract class Model implements ArrayAccess
                 $value = $this->{$key}(); // e.g. $this->posts()
                 
                 // Handle BelongsToMany relationship objects - call get() to get Collection
-                if ($value instanceof \Framework\Database\Relations\BelongsToMany) {
+                if ($value instanceof \BareMetalPHP\Database\Relations\BelongsToMany) {
                     $value = $value->get();
                 }
                 

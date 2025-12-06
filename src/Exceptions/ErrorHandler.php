@@ -1,8 +1,8 @@
 <?php
 
-namespace Framework\Exceptions;
+namespace BareMetalPHP\Exceptions;
 
-use Framework\Http\Response;
+use BareMetalPHP\Http\Response;
 
 use Throwable;
 

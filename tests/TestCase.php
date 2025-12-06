@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Framework\Application;
-use Framework\Database\Connection;
-use Framework\Database\Model;
-use PHPUnit\Framework\TestCase as BaseTestCase;
+use BareMetalPHP\Application;
+use BareMetalPHP\Database\Connection;
+use BareMetalPHP\Database\Model;
+use PHPUnit\BareMetalPHP\TestCase as BaseTestCase;
 use PDO;
 
 abstract class TestCase extends BaseTestCase
@@ -74,7 +74,7 @@ abstract class TestCase extends BaseTestCase
     protected function getBuilderPdo(): PDO
     {
         // Create a builder to get PDO
-        $builder = new \Framework\Database\Builder($this->getPdo(), 'test');
+        $builder = new \BareMetalPHP\Database\Builder($this->getPdo(), 'test');
         $reflection = new \ReflectionClass($builder);
         $property = $reflection->getProperty('pdo');
         $property->setAccessible(true);

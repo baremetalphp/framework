@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\Console;
+namespace BareMetalPHP\Console;
 
 abstract class Command
 {

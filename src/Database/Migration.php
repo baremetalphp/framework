@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Framework\Database;
+namespace BareMetalPHP\Database;
 
-use Framework\Database\Schema\Blueprint;
+use BareMetalPHP\Database\Schema\Blueprint;
 
 abstract class Migration
 {

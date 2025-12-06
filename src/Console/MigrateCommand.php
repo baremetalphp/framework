@@ -1,9 +1,9 @@
 <?php
 
-namespace Framework\Console;
+namespace BareMetalPHP\Console;
 
-use Framework\Database\Connection;
-use Framework\Database\Migration;
+use BareMetalPHP\Database\Connection;
+use BareMetalPHP\Database\Migration;
 use PDO;
 
 class MigrateCommand
@@ -11,12 +11,12 @@ class MigrateCommand
     public function handle(array $args = []): void
     {
         // Get connection from ConnectionManager if available
-        $app = \Framework\Application::getInstance();
+        $app = \BareMetalPHP\Application::getInstance();
         $connection = null;
         
         if ($app) {
             try {
-                $manager = $app->make(\Framework\Database\ConnectionManager::class);
+                $manager = $app->make(\BareMetalPHP\Database\ConnectionManager::class);
                 $connection = $manager->connection();
             } catch (\Exception $e) {
                 // Fallback to default

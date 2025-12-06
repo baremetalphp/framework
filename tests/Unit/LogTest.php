@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Framework\Support\Log;
+use BareMetalPHP\Support\Log;
 use Tests\TestCase;
 
 class LogTest extends TestCase

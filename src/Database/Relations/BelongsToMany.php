@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Framework\Database\Relations;
+namespace BareMetalPHP\Database\Relations;
 
-use Framework\Database\Model;
-use Framework\Support\Collection;
-use Framework\Database\Connection;
+use BareMetalPHP\Database\Model;
+use BareMetalPHP\Support\Collection;
+use BareMetalPHP\Database\Connection;
 
 /**
  * Many-to-many relationship class

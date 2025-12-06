@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Framework\Application;
-use Framework\Http\Kernel;
-use Framework\Routing\Router;
+use BareMetalPHP\Application;
+use BareMetalPHP\Http\Kernel;
+use BareMetalPHP\Routing\Router;
 
 /**
  * Test kernel without middleware to avoid output during tests

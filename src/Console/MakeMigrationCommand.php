@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\Console;
+namespace BareMetalPHP\Console;
 
 class MakeMigrationCommand
 {
@@ -33,8 +33,8 @@ class MakeMigrationCommand
         $template = <<<PHP
 <?php
 
-use Framework\Database\Migration;
-use Framework\Database\Connection;
+use BareMetalPHP\Database\Migration;
+use BareMetalPHP\Database\Connection;
 
 return new class extends Migration
 {

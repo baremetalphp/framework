@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Framework\Application;
-use Framework\Http\Request;
-use Framework\Http\Response;
-use Framework\Routing\Router;
+use BareMetalPHP\Application;
+use BareMetalPHP\Http\Request;
+use BareMetalPHP\Http\Response;
+use BareMetalPHP\Routing\Router;
 use Tests\TestCase;
 
 class RouterTest extends TestCase

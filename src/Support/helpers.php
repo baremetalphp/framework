@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Framework\Container\Container;
-use Framework\Database\Schema\SchemaBuilder;
+use BareMetalPHP\Container\Container;
+use BareMetalPHP\Database\Schema\SchemaBuilder;
 
 if (!function_exists('dd')) {
     /**
@@ -57,9 +57,9 @@ if (!function_exists('redirect')) {
     /**
      * Redirect to a URL
      */
-    function redirect(string $url, int $statusCode = 302): \Framework\Http\Response
+    function redirect(string $url, int $statusCode = 302): \BareMetalPHP\Http\Response
     {
-        return new \Framework\Http\Response('', $statusCode, ['Location' => $url]);
+        return new \BareMetalPHP\Http\Response('', $statusCode, ['Location' => $url]);
     }
 }
 
@@ -69,7 +69,7 @@ if (!function_exists('config')) {
      */
     function config(string $key, mixed $default = null): mixed
     {
-        return \Framework\Support\Config::get($key, $default);
+        return \BareMetalPHP\Support\Config::get($key, $default);
     }
 }
 
@@ -79,7 +79,7 @@ if (!function_exists('env')) {
      */
     function env(string $key, mixed $default = null): mixed
     {
-        return \Framework\Support\Env::get($key, $default);
+        return \BareMetalPHP\Support\Env::get($key, $default);
     }
 }
 
@@ -89,7 +89,7 @@ if (!function_exists('log_info')) {
      */
     function log_info(string $message, array $context = []): void
     {
-        \Framework\Support\Log::info($message, $context);
+        \BareMetalPHP\Support\Log::info($message, $context);
     }
 }
 
@@ -99,7 +99,7 @@ if (!function_exists('log_error')) {
      */
     function log_error(string $message, array $context = []): void
     {
-        \Framework\Support\Log::error($message, $context);
+        \BareMetalPHP\Support\Log::error($message, $context);
     }
 }
 
@@ -109,7 +109,7 @@ if (!function_exists('log_warning')) {
      */
     function log_warning(string $message, array $context = []): void
     {
-        \Framework\Support\Log::warning($message, $context);
+        \BareMetalPHP\Support\Log::warning($message, $context);
     }
 }
 
@@ -167,13 +167,13 @@ if (!function_exists('route')) {
      */
     function route(string $name, array $parameters = []): string
     {
-        $app = \Framework\Application::getInstance();
+        $app = \BareMetalPHP\Application::getInstance();
         
         if (!$app) {
             throw new \RuntimeException('Application instance not available. Make sure bootstrap/app.php sets Application::setInstance($app).');
         }
         
-        $router = $app->make(\Framework\Routing\Router::class);
+        $router = $app->make(\BareMetalPHP\Routing\Router::class);
         $path = $router->route($name, $parameters);
         
         // Return relative path - use url() helper if you need full URL
@@ -185,9 +185,9 @@ if (!function_exists('view')) {
     /**
      * Create a view response
      */
-    function view(string $view, array $data = []): \Framework\Http\Response
+    function view(string $view, array $data = []): \BareMetalPHP\Http\Response
     {
-        return \Framework\View\View::make($view, $data);
+        return \BareMetalPHP\View\View::make($view, $data);
     }
 }
 
@@ -195,9 +195,9 @@ if (!function_exists('response')) {
     /**
      * Create a response
      */
-    function response(string $content = '', int $statusCode = 200, array $headers = []): \Framework\Http\Response
+    function response(string $content = '', int $statusCode = 200, array $headers = []): \BareMetalPHP\Http\Response
     {
-        return new \Framework\Http\Response($content, $statusCode, $headers);
+        return new \BareMetalPHP\Http\Response($content, $statusCode, $headers);
     }
 }
 
@@ -205,9 +205,9 @@ if (!function_exists('json_response')) {
     /**
      * Create a JSON response
      */
-    function json_response(array $data, int $statusCode = 200): \Framework\Http\Response
+    function json_response(array $data, int $statusCode = 200): \BareMetalPHP\Http\Response
     {
-        return new \Framework\Http\Response(
+        return new \BareMetalPHP\Http\Response(
             json_encode($data, JSON_PRETTY_PRINT),
             $statusCode,
             ['Content-Type' => 'application/json']
@@ -261,12 +261,12 @@ if (!function_exists('vite')) {
     /**
      * Get Vite asset manager instance
      */
-    function vite(): ?\Framework\Frontend\AssetManager
+    function vite(): ?\BareMetalPHP\Frontend\AssetManager
     {
-        $app = \Framework\Application::getInstance();
+        $app = \BareMetalPHP\Application::getInstance();
         if ($app) {
             try {
-                return $app->make(\Framework\Frontend\AssetManager::class);
+                return $app->make(\BareMetalPHP\Frontend\AssetManager::class);
             } catch (\Exception $e) {
                 return null;
             }
@@ -279,12 +279,12 @@ if (!function_exists('spa')) {
     /**
      * Render an SPA response
      */
-    function spa(string $component, array $props = [], ?string $layout = null): \Framework\Http\Response
+    function spa(string $component, array $props = [], ?string $layout = null): \BareMetalPHP\Http\Response
     {
-        $app = \Framework\Application::getInstance();
+        $app = \BareMetalPHP\Application::getInstance();
         if ($app) {
             try {
-                $helper = $app->make(\Framework\Frontend\SPAHelper::class);
+                $helper = $app->make(\BareMetalPHP\Frontend\SPAHelper::class);
                 return $helper->render($component, $props, $layout);
             } catch (\Exception $e) {
                 throw new \RuntimeException('SPA helper not available. Make sure FrontendServiceProvider is registered.');
@@ -300,7 +300,7 @@ if (!function_exists('auth')) {
      */
     function auth(): ?\App\Models\User
     {
-        return \Framework\Auth\Auth::user();
+        return \BareMetalPHP\Auth\Auth::user();
     }
 }
 
@@ -315,10 +315,10 @@ if (!function_exists('session')) {
         }
 
         if ($value === null) {
-            return \Framework\Support\Session::get($key);
+            return \BareMetalPHP\Support\Session::get($key);
         }
 
-        \Framework\Support\Session::set($key, $value);
+        \BareMetalPHP\Support\Session::set($key, $value);
         return $value;
     }
 }

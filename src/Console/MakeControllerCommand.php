@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\Console;
+namespace BareMetalPHP\Console;
 
 class MakeControllerCommand
 {
@@ -25,8 +25,8 @@ class MakeControllerCommand
 
 namespace App\Http\Controllers;
 
-use Framework\Http\Request;
-use Framework\Http\Response;
+use BareMetalPHP\Http\Request;
+use BareMetalPHP\Http\Response;
 
 class {$name}
 {

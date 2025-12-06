@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Framework\Support\Collection;
+use BareMetalPHP\Support\Collection;
 use Tests\TestCase;
 
 class CollectionTest extends TestCase

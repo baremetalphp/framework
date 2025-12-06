@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Database;
 
-use Framework\Database\Connection;
-use Framework\Database\ConnectionManager;
-use Framework\Database\Builder;
-use Framework\Support\Collection;
+use BareMetalPHP\Database\Connection;
+use BareMetalPHP\Database\ConnectionManager;
+use BareMetalPHP\Database\Builder;
+use BareMetalPHP\Support\Collection;
 use Tests\TestCase;
 
 class MultiDriverTest extends TestCase

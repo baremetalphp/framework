@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Framework\Auth;
+namespace BareMetalPHP\Auth;
 
 use App\Models\User;
-use Framework\Support\Session;
+use BareMetalPHP\Support\Session;
 
 /**
  * Authentication service

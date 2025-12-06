@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use Framework\Application;
-use Framework\Http\Kernel;
-use Framework\Http\Request;
-use Framework\Http\Response;
-use Framework\Routing\Router;
+use BareMetalPHP\Application;
+use BareMetalPHP\Http\Kernel;
+use BareMetalPHP\Http\Request;
+use BareMetalPHP\Http\Response;
+use BareMetalPHP\Routing\Router;
 use Tests\TestCase;
 use Tests\Feature\TestKernel;
 

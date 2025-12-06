@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Framework\Database\Driver;
+namespace BareMetalPHP\Database\Driver;
 
 class PostgresDriver extends AbstractDriver
 {

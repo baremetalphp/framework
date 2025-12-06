@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Framework\Database;
+namespace BareMetalPHP\Database;
 
-use Framework\Database\Driver\DriverInterface;
-use Framework\Database\Driver\SqliteDriver;
-use Framework\Database\Driver\MysqlDriver;
-use Framework\Database\Driver\PostgresDriver;
+use BareMetalPHP\Database\Driver\DriverInterface;
+use BareMetalPHP\Database\Driver\SqliteDriver;
+use BareMetalPHP\Database\Driver\MysqlDriver;
+use BareMetalPHP\Database\Driver\PostgresDriver;
 
 class ConnectionManager
 {
