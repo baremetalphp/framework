@@ -1,6 +1,20 @@
 # Bare Metal PHP Framework
 
-A lightweight, educational PHP framework with service container, routing, ORM, migrations, and more.
+A lightweight, educational PHP framework with service container, routing, ORM, migrations, and more.  
+
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![PHP Version](https://img.shields.io/badge/php-%3E%3D8.2-blue)
+![Packagist Version](https://img.shields.io/packagist/v/baremetalphp/framework)
+![Downloads](https://img.shields.io/packagist/dt/baremetalphp/framework)
+![Stars](https://img.shields.io/github/stars/baremetalphp/framework?style=social)
+![Code Size](https://img.shields.io/github/languages/code-size/baremetalphp/framework)
+
+![Inspired By Laravel](https://img.shields.io/badge/inspired%20by-Laravel-ff2d20)
+![Lightweight](https://img.shields.io/badge/framework-lightweight-success)
+
+
+> [!CAUTION]
+> This framework is *NOT PRODUCTION READY*.  This is a limited feature framework intended as a learning tool/playground for developers.   
 
 ## Features
 
@@ -19,14 +33,6 @@ A lightweight, educational PHP framework with service container, routing, ORM, m
 - PDO extension
 - SQLite, MySQL, or PostgreSQL support
 
-## Installation
-
-Install via Composer:
-
-```bash
-composer require elliotanderson/phpframework
-```
-
 ## Quick Start
 
 ### Creating a New Project
@@ -34,8 +40,19 @@ composer require elliotanderson/phpframework
 The easiest way to get started is to use the project skeleton:
 
 ```bash
-composer create-project elliotanderson/baremetal my-app
+composer create-project baremetalphp/baremetalphp [your-project]
+
+cd [your-project]
+
+php mini migrate
+php mini serve
 ```
+
+> Note: The framework defaults to a SQLite database, but you can set up a MySQL connection in `.env` (PostgreSQL is ~95% functional but not fully tested).
+
+
+
+
 
 ### Manual Setup
 
