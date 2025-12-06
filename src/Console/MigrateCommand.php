@@ -142,7 +142,7 @@ class MigrateCommand
         if ($driverName === 'sqlite') {
             $pdo->exec("
                 CREATE TABLE IF NOT EXISTS {$quotedTable} (
-                    id {$idType} PRIMARY KEY,
+                    id {$idType},
                     migration TEXT NOT NULL,
                     batch INTEGER NOT NULL,
                     ran_at TEXT NOT NULL
@@ -151,7 +151,7 @@ class MigrateCommand
         } else {
             $pdo->exec("
                 CREATE TABLE IF NOT EXISTS {$quotedTable} (
-                    id {$idType} PRIMARY KEY,
+                    id {$idType},
                     migration VARCHAR(255) NOT NULL,
                     batch INT NOT NULL,
                     ran_at TIMESTAMP NOT NULL

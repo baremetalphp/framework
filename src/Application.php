@@ -6,6 +6,7 @@ namespace BareMetalPHP;
 
 use BareMetalPHP\Support\ServiceProvider;
 use ReflectionClass;
+use ReflectionMethod;
 use ReflectionParameter;
 
 class Application
