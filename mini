@@ -7,11 +7,11 @@ require __DIR__ . '/vendor/autoload.php';
 
 // Bootstrap the application to load .env and config
 // This ensures console commands have access to environment variables and service providers
+$app = null;
 if (file_exists(__DIR__ . '/bootstrap/app.php')) {
-    require __DIR__ . '/bootstrap/app.php';
+    $app = require __DIR__ . '/bootstrap/app.php';
 }
 
+$console = new Application($app);
 
-$app = new Application();
-
-$app->run($argv);
+$console->run($argv);
