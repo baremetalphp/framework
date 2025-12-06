@@ -60,8 +60,28 @@ class ConfigServiceProvider extends ServiceProvider
 
     protected function getConfigPath(): string
     {
-        $frameworkRoot = dirname(__DIR__, 2);
-        return Env::get('CONFIG_PATH') ?: $frameworkRoot . '/config';
+        // Check for explicit environment variable first
+        if (Env::get('CONFIG_PATH')) {
+            return Env::get('CONFIG_PATH');
+        }
+
+        // Try multiple locations for config (in order of priority)
+        $possiblePaths = [
+            // Current working directory (where script is run from) - highest priority
+            getcwd() . '/config',
+            // Framework root (relative to this file) - for development/testing
+            dirname(__DIR__, 2) . '/config',
+        ];
+        
+        // Return the first path that exists, or default to current working directory
+        foreach ($possiblePaths as $path) {
+            if (is_dir($path)) {
+                return $path;
+            }
+        }
+        
+        // Default to current working directory if nothing found
+        return getcwd() . '/config';
     }
 }
 

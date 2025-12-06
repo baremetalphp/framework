@@ -29,8 +29,28 @@ class RoutingServiceProvider extends ServiceProvider
 
     protected function getRoutesFile(): string
     {
-        $frameworkRoot = dirname(__DIR__, 2);
-        return getenv('ROUTES_FILE') ?: $frameworkRoot . '/routes/web.php';
+        // Check for explicit environment variable first
+        if (getenv('ROUTES_FILE')) {
+            return getenv('ROUTES_FILE');
+        }
+
+        // Try multiple locations for routes file (in order of priority)
+        $possiblePaths = [
+            // Current working directory (where script is run from) - highest priority
+            getcwd() . '/routes/web.php',
+            // Framework root (relative to this file) - for development/testing
+            dirname(__DIR__, 2) . '/routes/web.php',
+        ];
+        
+        // Return the first path that exists, or default to current working directory
+        foreach ($possiblePaths as $path) {
+            if (file_exists($path)) {
+                return $path;
+            }
+        }
+        
+        // Default to current working directory if nothing found (will be checked in register())
+        return getcwd() . '/routes/web.php';
     }
 }
 
