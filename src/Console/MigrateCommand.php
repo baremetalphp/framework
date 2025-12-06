@@ -1,121 +1,162 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BareMetalPHP\Console;
 
 use BareMetalPHP\Database\Connection;
+use BareMetalPHP\Database\ConnectionManager;
 use BareMetalPHP\Database\Migration;
 use PDO;
 
+/**
+ * Console command responsible for applying all outstanding migrations.
+ *
+ * This command uses the ConnectionManager when available and falls back
+ * to a local SQLite database when no configured connection exists.
+ */
 class MigrateCommand
 {
+    /**
+     * Create a new migrate command instance.
+     *
+     * @param ConnectionManager $manager
+     */
+    public function __construct(
+        private ConnectionManager $manager
+    ) {
+    }
+
+    /**
+     * Execute the migration command.
+     *
+     * @param array $args
+     * @return void
+     */
     public function handle(array $args = []): void
     {
-        // Get connection from ConnectionManager if available
-        $app = \BareMetalPHP\Application::getInstance();
-        $connection = null;
-        
-        if ($app) {
-            try {
-                $manager = $app->make(\BareMetalPHP\Database\ConnectionManager::class);
-                $connection = $manager->connection();
-            } catch (\Exception $e) {
-                // Fallback to default
-            }
-        }
-        
-        // Fallback to SQLite if ConnectionManager not available
-        if (!$connection) {
-            $dsn = 'sqlite:' . getcwd() . '/database.sqlite';
-            $connection = new Connection($dsn);
-        }
-        
-        $pdo = $connection->pdo();
+        $connection = $this->resolveConnection();
+        $this->ensureMigrationsTable($connection);
+
+        $pdo    = $connection->pdo();
         $driver = $connection->getDriver();
-        
-        // Ensure migrations table exists (driver-aware)
-        $quotedTable = $driver->quoteIdentifier('migrations');
-        $driverName = $driver->getName();
-        $idType = $driver->getAutoIncrementType();
-        
-        // Use VARCHAR for migration name (needed for UNIQUE constraint in MySQL)
-        // SQLite can use TEXT, but VARCHAR works fine for all drivers
-        $migrationType = 'VARCHAR(255)';
-        
-        // Driver-specific timestamp type
-        if ($driverName === 'pgsql') {
-            $timestampType = 'TIMESTAMP';
-        } elseif ($driverName === 'mysql') {
-            $timestampType = 'DATETIME';
-        } else {
-            $timestampType = 'TEXT'; // SQLite
-        }
-        
-        $intType = 'INTEGER';
-        
-        $pdo->exec(<<<SQL
-CREATE TABLE IF NOT EXISTS {$quotedTable} (
-    id {$idType},
-    migration {$migrationType} NOT NULL UNIQUE,
-    batch {$intType} NOT NULL,
-    ran_at {$timestampType} NOT NULL
-);
-SQL);
+        $table  = $driver->quoteIdentifier('migrations');
+
+        // Determine next batch number
+        $stmt      = $pdo->query("SELECT MAX(batch) AS max_batch FROM {$table}");
+        $result    = $stmt->fetch(PDO::FETCH_ASSOC);
+        $nextBatch = ((int) ($result['max_batch'] ?? 0)) + 1;
 
         $migrationsDir = getcwd() . '/database/migrations';
+
         if (!is_dir($migrationsDir)) {
-            mkdir($migrationsDir, 0777, true);
-        }
-
-        $files = glob($migrationsDir . '/*.php');
-        sort($files);
-
-        if (!$files) {
-            echo "No migration files found in database/migrations.\n";
+            echo "No migrations directory found at {$migrationsDir}\n";
             return;
         }
 
-        $applied = $pdo->query('SELECT migration from migrations')->fetchAll(PDO::FETCH_COLUMN);
+        $files = glob($migrationsDir . '/*.php');
+        $ran   = false;
 
-        $currentBatch = (int) $pdo->query('SELECT COALESCE(MAX(batch), 0) FROM migrations')->fetchColumn();
-        $nextBatch = $currentBatch + 1;
+        if (!$files) {
+            echo "No migration files found.\n";
+            return;
+        }
 
-        $ranSomething = false;
-
+        // Run all outstanding migrations
         foreach ($files as $file) {
-            $name = basename($file);
+            $name = basename($file, '.php');
 
-            if (in_array($name, $applied, true)) {
-                continue; // already ran
-            }
+            $check = $pdo->prepare("SELECT COUNT(*) AS count FROM {$table} WHERE migration = :migration");
+            $check->execute([':migration' => $name]);
+            $exists = (int) $check->fetch(PDO::FETCH_ASSOC)['count'] > 0;
 
-            $migration = require $file;
-
-            if (!$migration instanceof Migration) {
-                echo "Skipping {$name}: file did not return a Migration instance.\n";
+            if ($exists) {
                 continue;
             }
 
-            echo "Migrating: {$name}...\n";
+            /** @var Migration $migration */
+            $migration = require $file;
 
+            echo "Running migration: {$name}...\n";
             $migration->up($connection);
 
-            $stmt = $pdo->prepare(
-                'INSERT INTO migrations (migration, batch, ran_at) VALUES (:migration, :batch, :ran_at)'
-            );
-
-            $stmt->execute([
+            $insert = $pdo->prepare("
+                INSERT INTO {$table} (migration, batch, ran_at)
+                VALUES (:migration, :batch, :ran_at)
+            ");
+            $insert->execute([
                 ':migration' => $name,
-                ':batch' => $nextBatch,
-                ':ran_at' => date('c'),
+                ':batch'     => $nextBatch,
+                ':ran_at'    => date('c'),
             ]);
 
-            $ranSomething = true;
+            $ran = true;
         }
 
-        if (!$ranSomething) {
-            echo "Nothing to migrate.\n";
+        echo $ran
+            ? "Migrations completed.\n"
+            : "Nothing to migrate.\n";
+    }
+
+    /**
+     * Resolve the database connection to be used for migrations.
+     *
+     * Attempts to use the ConnectionManager and falls back to a
+     * local SQLite database when no configured connection exists.
+     *
+     * @return Connection
+     */
+    private function resolveConnection(): Connection
+    {
+        try {
+            $connection = $this->manager->connection();
+        } catch (\Throwable) {
+            $connection = null;
+        }
+
+        if (!$connection) {
+            $dsn        = 'sqlite:' . getcwd() . '/database.sqlite';
+            $connection = new Connection($dsn);
+        }
+
+        return $connection;
+    }
+
+    /**
+     * Ensure that the migrations table exists on the given connection.
+     *
+     * The table definition is adapted for the underlying driver.
+     *
+     * @param Connection $connection
+     * @return void
+     */
+    private function ensureMigrationsTable(Connection $connection): void
+    {
+        $pdo    = $connection->pdo();
+        $driver = $connection->getDriver();
+
+        $quotedTable = $driver->quoteIdentifier('migrations');
+        $driverName  = $driver->getName();
+        $idType      = $driver->getAutoIncrementType();
+
+        if ($driverName === 'sqlite') {
+            $pdo->exec("
+                CREATE TABLE IF NOT EXISTS {$quotedTable} (
+                    id {$idType} PRIMARY KEY,
+                    migration TEXT NOT NULL,
+                    batch INTEGER NOT NULL,
+                    ran_at TEXT NOT NULL
+                )
+            ");
         } else {
-            echo "Migrations completed.\n";
+            $pdo->exec("
+                CREATE TABLE IF NOT EXISTS {$quotedTable} (
+                    id {$idType} PRIMARY KEY,
+                    migration VARCHAR(255) NOT NULL,
+                    batch INT NOT NULL,
+                    ran_at TIMESTAMP NOT NULL
+                )
+            ");
         }
     }
 }
