@@ -16,9 +16,7 @@ class Kernel
      * List of global middleware.
      * @var string[]
      */
-    protected array $middleware = [
-        \App\Http\Middleware\LogRequests::class
-    ];
+    protected array $middleware = [];
 
     public function handle(Request $request): Response
     {
