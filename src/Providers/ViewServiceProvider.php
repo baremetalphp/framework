@@ -26,23 +26,28 @@ class ViewServiceProvider extends ServiceProvider
             return getenv('VIEW_BASE_PATH');
         }
 
+        // Try to find the project root
+        $projectRoot = $this->findProjectRoot();
+
         // Try multiple locations for views (in order of priority)
         $possiblePaths = [
-            // Current working directory (where script is run from) - highest priority
+            // Project root (calculated)
+            $projectRoot . '/resources/views',
+            // Current working directory (where script is run from)
             getcwd() . '/resources/views',
             // Framework root (relative to this file) - for development/testing
             dirname(__DIR__, 2) . '/resources/views',
         ];
         
-        // Return the first path that exists, or default to current working directory
+        // Return the first path that exists, or default to project root
         foreach ($possiblePaths as $path) {
             if (is_dir($path)) {
                 return $path;
             }
         }
         
-        // Default to current working directory if nothing found
-        return getcwd() . '/resources/views';
+        // Default to project root if nothing found
+        return $projectRoot . '/resources/views';
     }
 
     protected function getViewCachePath(): string
@@ -52,31 +57,64 @@ class ViewServiceProvider extends ServiceProvider
             return getenv('VIEW_CACHE_PATH');
         }
 
+        // Try to find the project root
+        $projectRoot = $this->findProjectRoot();
+
         // Try multiple locations for view cache (in order of priority)
         $possiblePaths = [
-            // Current working directory (where script is run from) - highest priority
+            // Project root (calculated)
+            $projectRoot . '/storage/views',
+            // Current working directory (where script is run from)
             getcwd() . '/storage/views',
             // Framework root (relative to this file) - for development/testing
             dirname(__DIR__, 2) . '/storage/views',
         ];
         
-        // Return the first path that exists, or default to current working directory
+        // Return the first path that exists, or create it
         foreach ($possiblePaths as $path) {
             // Create directory if it doesn't exist (for cache)
             if (!is_dir($path)) {
-                if (is_dir(dirname($path))) {
-                    @mkdir($path, 0755, true);
-                }
+                @mkdir($path, 0755, true);
             }
             if (is_dir($path)) {
                 return $path;
             }
         }
         
-        // Default to current working directory if nothing found
-        $defaultPath = getcwd() . '/storage/views';
+        // Default to project root if nothing found
+        $defaultPath = $projectRoot . '/storage/views';
         @mkdir($defaultPath, 0755, true);
         return $defaultPath;
+    }
+
+    protected function findProjectRoot(): string
+    {
+        // Start from current working directory
+        $dir = getcwd();
+        
+        // Go up directories until we find composer.json, vendor/autoload.php, or resources/ directory
+        $maxDepth = 10;
+        $depth = 0;
+        
+        while ($depth < $maxDepth) {
+            // Check for common project root markers
+            if (file_exists($dir . '/composer.json') || 
+                file_exists($dir . '/vendor/autoload.php') ||
+                is_dir($dir . '/resources')) {
+                return $dir;
+            }
+            
+            $parent = dirname($dir);
+            if ($parent === $dir) {
+                // Reached filesystem root
+                break;
+            }
+            $dir = $parent;
+            $depth++;
+        }
+        
+        // Fallback to current working directory
+        return getcwd();
     }
 }
 

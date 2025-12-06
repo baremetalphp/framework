@@ -44,7 +44,7 @@ class Kernel
                     'message' => $e->getMessage(),
                 ];
                 
-                if (getenv('APP_DEBUG') === 'true') {
+                if (app_debug()) {
                     $error['file'] = $e->getFile();
                     $error['line'] = $e->getLine();
                     $error['trace'] = explode("\n", $e->getTraceAsString());
@@ -58,7 +58,7 @@ class Kernel
             }
             
             // in debug mode, show pretty error page for non-API requests
-            if (getenv('APP_DEBUG') === 'true') {
+            if (app_debug()) {
                 $html = ErrorPageRenderer::render($e, $request, $this->app);
                 return new Response($html, 500);
             }

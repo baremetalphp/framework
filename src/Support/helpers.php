@@ -83,6 +83,16 @@ if (!function_exists('env')) {
     }
 }
 
+if (!function_exists('app_debug')) {
+    /**
+     * Check if application is in debug mode
+     */
+    function app_debug(): bool
+    {
+        return \BareMetalPHP\Support\Env::get('APP_DEBUG', false) === true;
+    }
+}
+
 if (!function_exists('log_info')) {
     /**
      * Log an info message

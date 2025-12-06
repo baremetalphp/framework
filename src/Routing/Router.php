@@ -141,6 +141,15 @@ class Router
         $path   = $request->getPath();
 
         if (!isset($this->routes[$method])) {
+            // In debug mode, throw exception to get error page
+            if (app_debug()) {
+                $availableMethods = array_keys($this->routes);
+                throw new \RuntimeException(
+                    "No routes registered for {$method} method. Available methods: " . 
+                    (empty($availableMethods) ? 'none' : implode(', ', $availableMethods)) .
+                    "\nRequested path: {$path}"
+                );
+            }
             return new Response('Not Found', 404);
         }
 
@@ -174,7 +183,16 @@ class Router
             }
         }
 
-        // no matching route
+        // no matching route - in debug mode, throw exception to get error page
+        if (app_debug()) {
+            $registeredRoutes = array_map(fn($r) => $r['uri'], $this->routes[$method] ?? []);
+            throw new \RuntimeException(
+                "Route not found: {$method} {$path}\n" .
+                "Registered routes for {$method}: " . 
+                (empty($registeredRoutes) ? 'none' : "\n  - " . implode("\n  - ", $registeredRoutes))
+            );
+        }
+        
         return new Response('Not Found', 404);
     }
 

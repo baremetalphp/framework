@@ -65,23 +65,58 @@ class ConfigServiceProvider extends ServiceProvider
             return Env::get('CONFIG_PATH');
         }
 
+        // Try to find the project root
+        $projectRoot = $this->findProjectRoot();
+
         // Try multiple locations for config (in order of priority)
         $possiblePaths = [
-            // Current working directory (where script is run from) - highest priority
+            // Project root (calculated)
+            $projectRoot . '/config',
+            // Current working directory (where script is run from)
             getcwd() . '/config',
             // Framework root (relative to this file) - for development/testing
             dirname(__DIR__, 2) . '/config',
         ];
         
-        // Return the first path that exists, or default to current working directory
+        // Return the first path that exists, or default to project root
         foreach ($possiblePaths as $path) {
             if (is_dir($path)) {
                 return $path;
             }
         }
         
-        // Default to current working directory if nothing found
-        return getcwd() . '/config';
+        // Default to project root if nothing found
+        return $projectRoot . '/config';
+    }
+
+    protected function findProjectRoot(): string
+    {
+        // Start from current working directory
+        $dir = getcwd();
+        
+        // Go up directories until we find composer.json, vendor/autoload.php, or config/ directory
+        $maxDepth = 10;
+        $depth = 0;
+        
+        while ($depth < $maxDepth) {
+            // Check for common project root markers
+            if (file_exists($dir . '/composer.json') || 
+                file_exists($dir . '/vendor/autoload.php') ||
+                is_dir($dir . '/config')) {
+                return $dir;
+            }
+            
+            $parent = dirname($dir);
+            if ($parent === $dir) {
+                // Reached filesystem root
+                break;
+            }
+            $dir = $parent;
+            $depth++;
+        }
+        
+        // Fallback to current working directory
+        return getcwd();
     }
 }
 
