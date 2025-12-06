@@ -137,6 +137,11 @@ class Router
 
     public function dispatch(Request $request): Response
     {
+
+        // Make the current Request available for Dependency Injection.
+        // Any controller or middleware that type-hints BareMetalPHP\Http\Request
+        // and is resolved via the container will now get THIS instance.
+        $this->app->instance(Request::class, $request);
         $method = $request->getMethod();
         $path   = $request->getPath();
 
