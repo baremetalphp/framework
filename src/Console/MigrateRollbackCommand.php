@@ -38,13 +38,16 @@ class MigrateRollbackCommand
         $connection = $this->resolveConnection();
         $this->ensureMigrationsTable($connection);
 
-        $pdo    = $connection->pdo();
-        $driver = $connection->getDriver();
-        $table  = $driver->quoteIdentifier('migrations');
+        $pdo        = $connection->pdo();
+        $driver     = $connection->getDriver();
+        $table      = $driver->quoteIdentifier('migrations');
+        $driverName = $driver->getName();
 
         // Determine the most recent batch
-        $stmt     = $pdo->query("SELECT MAX(batch) AS max_batch FROM {$table}");
-        $result   = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt   = $pdo->query("SELECT MAX(batch) AS max_batch FROM {$table}");
+        $result = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+        $stmt->closeCursor();
+
         $maxBatch = (int) ($result['max_batch'] ?? 0);
 
         if ($maxBatch === 0) {
@@ -61,30 +64,59 @@ class MigrateRollbackCommand
         ");
         $select->execute([':batch' => $maxBatch]);
 
-        $migrations    = $select->fetchAll(PDO::FETCH_ASSOC);
-        $migrationsDir = getcwd() . '/database/migrations';
+        $migrations = $select->fetchAll(PDO::FETCH_ASSOC);
+        $select->closeCursor(); // important for SQLite
 
-        foreach ($migrations as $row) {
-            $name = $row['migration'];
-            $file = "{$migrationsDir}/{$name}.php";
-
-            if (!file_exists($file)) {
-                echo "Skipping missing migration: {$file}\n";
-                continue;
-            }
-
-            /** @var Migration $migration */
-            $migration = require $file;
-
-            echo "Rolling back: {$name}...\n";
-            $migration->down($connection);
-
-            $delete = $pdo->prepare("DELETE FROM {$table} WHERE migration = :migration");
-            $delete->execute([':migration' => $name]);
+        if (empty($migrations)) {
+            echo "Nothing to rollback.\n";
+            return;
         }
 
-        echo "Rollback of batch {$maxBatch} completed.\n";
-    }
+        $migrationsDir = getcwd() . '/database/migrations';
+
+        // For SQLite, DDL has its own transaction semantics; avoid wrapping
+        $useTransaction = $driverName !== 'sqlite' && !$pdo->inTransaction();
+
+        if ($useTransaction) {
+            $pdo->beginTransaction();
+        }
+
+        try {
+            foreach ($migrations as $row) {
+                $name = $row['migration'];
+                $file = "{$migrationsDir}/{$name}.php";
+
+                if (!file_exists($file)) {
+                    echo "Skipping missing migration: {$file}\n";
+                    continue;
+                }
+
+                /** @var Migration $migration */
+                $migration = require $file;
+
+                echo "Rolling back: {$name}...\n";
+                $migration->down($connection);
+
+                // Remove record from the migrations table
+                $delete = $pdo->prepare("DELETE FROM {$table} WHERE migration = :migration");
+                $delete->execute([':migration' => $name]);
+                $delete->closeCursor();
+            }
+
+            if ($useTransaction && $pdo->inTransaction()) {
+                $pdo->commit();
+            }
+
+            echo "Rollback of batch {$maxBatch} completed.\n";
+        } catch (\Throwable $e) {
+            if ($useTransaction && $pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+
+            throw $e;
+        }
+}
+
 
     /**
      * Resolve the database connection to be used for migrations.

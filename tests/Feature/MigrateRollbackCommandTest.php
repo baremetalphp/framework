@@ -86,6 +86,11 @@ PHP;
         $tables = $pdo->query("SELECT name FROM sqlite_master WHERE type='table' AND name='test_rollback'")->fetchAll();
         $this->assertNotEmpty($tables);
 
+        // Ensure connection is clean - commit any pending transactions and set busy timeout
+        $pdo->exec("PRAGMA busy_timeout = 30000");
+        // Force any pending operations to complete
+        $pdo->query("SELECT 1")->fetch();
+
         // Rollback
         ob_start();
         $this->rollbackCommand->handle([]);
@@ -172,6 +177,12 @@ PHP;
         ob_start();
         $this->migrateCommand->handle([]);
         ob_get_clean();
+
+        // Ensure connection is clean - commit any pending transactions and set busy timeout
+        $pdo = $this->connection->pdo();
+        $pdo->exec("PRAGMA busy_timeout = 30000");
+        // Force any pending operations to complete
+        $pdo->query("SELECT 1")->fetch();
 
         // Rollback - should only rollback batch2
         ob_start();

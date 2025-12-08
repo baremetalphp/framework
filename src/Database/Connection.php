@@ -29,6 +29,11 @@ class Connection
         if ($this->driver === null) {
             $this->autoDetectDriver($dsn);
         }
+        
+        // Set SQLite busy timeout to handle locks gracefully
+        if (str_starts_with($dsn, 'sqlite:')) {
+            $this->pdo->exec("PRAGMA busy_timeout = 30000");
+        }
     }
 
     public function pdo(): PDO
