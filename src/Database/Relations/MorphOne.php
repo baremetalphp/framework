@@ -5,21 +5,95 @@ declare(strict_types=1);
 namespace BareMetalPHP\Database\Relations;
 
 use BareMetalPHP\Database\Model;
+use BareMetalPHP\Database\Builder;
 use BareMetalPHP\Support\Collection;
 
-class MorphOne extends MorphMany
+class MorphOne
 {
+    public function __construct(
+        protected Model $parent,
+        protected string $related,
+        protected string $morphType, // e.g. "commentable_Type"
+        protected string $morphId, // e.g. "commentable_id"
+        protected string $localKey = 'id',
+    ) {}
+
+    /**
+     * 
+     * @return Builder
+     */
+    public function newQuery(): Builder
+    {
+        /**
+         * @var class-string<Model> $related
+         */
+        $related = $this->related;
+
+        return $related::query();
+    }
+
+    protected function morphClass(): string
+    {
+        return $this->parent->getMorphClass();
+    }
+
     /**
      * Lazy-load single related model.
      */
     public function getResults(): ?Model
     {
-        $results = parent::getResults();
+        $id = $this->parent->getAttribute($this->localKey);
 
-        /** @var Model|null $first */
-        $first = $results->first();
+        if ($id === null) {
+            return null;
+        }
 
-        return $first;
+        return $this->newQuery()
+            ->where($this->morphType, '=', $this->morphClass())
+            ->where($this->morphId, '=', $id)
+            ->first();
+    }
+
+    /**
+     * Collect ids for eager constraints.
+     *
+     * @param array<int, Model> $models
+     * @return array<int, int|string>
+     */
+    public function addEagerConstraints(array $models): array
+    {
+        $keys = [];
+
+        foreach ($models as $model) {
+            if (!$model instanceof Model) {
+                continue;
+            }
+
+            $value = $model->getAttribute($this->localKey);
+
+            if ($value !== null) {
+                $keys[] = $value;
+            }
+        }
+
+        return array_values(array_unique($keys));
+    }
+
+    /**
+     * Run eager load query
+     * @param array $keys
+     * @return Collection
+     */
+    public function getEager(array $keys): Collection
+    {
+        if ($keys === []) {
+            return new Collection();
+        }
+
+        return $this->newQuery()
+            ->where($this->morphType, '=', $this->morphClass())
+            ->whereIn($this->morphId, $keys)
+            ->get();
     }
 
     /**

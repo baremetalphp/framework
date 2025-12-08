@@ -150,8 +150,3 @@ class AuthTest extends TestCase
     }
 }
 
-class User extends \BareMetalPHP\Database\Model
-{
-    protected $table = 'users';
-}
-}

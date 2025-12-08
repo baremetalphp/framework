@@ -36,7 +36,7 @@ class ConsoleApplicationTest extends TestCase
         $this->assertStringContainsString('make:controller', $output);
         $this->assertStringContainsString('migrate', $output);
         $this->assertStringContainsString('frontend:install', $output);
-        $this->assertStringContainsString('app:install-go-server', $output);
+        $this->assertStringContainsString('go:install', $output);
     }
 
     public function testShowsErrorForUnknownCommand(): void
@@ -85,12 +85,12 @@ class ConsoleApplicationTest extends TestCase
         $this->assertArrayHasKey('migrate:rollback', $commands);
         $this->assertArrayHasKey('make:migration', $commands);
         $this->assertArrayHasKey('frontend:install', $commands);
-        $this->assertArrayHasKey('app:install-go-server', $commands);
+        $this->assertArrayHasKey('go:install', $commands);
 
         $this->assertEquals(ServeCommand::class, $commands['serve']);
         $this->assertEquals(MakeControllerCommand::class, $commands['make:controller']);
         $this->assertEquals(MigrateCommand::class, $commands['migrate']);
         $this->assertEquals(InstallFrontendCommand::class, $commands['frontend:install']);
-        $this->assertEquals(InstallGoAppServerCommand::class, $commands['app:install-go-server']);
+        $this->assertEquals(InstallGoAppServerCommand::class, $commands['go:install']);
     }
 }

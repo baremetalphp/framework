@@ -28,7 +28,7 @@ class SqlBuilderTest extends TestCase
         $clause = SqlBuilder::buildWhereClause($wheres, $this->driver, $bindings);
         
         $this->assertStringContainsString('WHERE', $clause);
-        $this->assertStringContainsString('"name"', $clause);
+        $this->assertStringContainsString('[name]', $clause);
         $this->assertStringContainsString('?', $clause);
         $this->assertCount(1, $bindings);
         $this->assertSame('John', $bindings[0]);
@@ -125,7 +125,7 @@ class SqlBuilderTest extends TestCase
         $clause = SqlBuilder::buildOrderByClause($orders, $this->driver);
         
         $this->assertStringContainsString('ORDER BY', $clause);
-        $this->assertStringContainsString('"name"', $clause);
+        $this->assertStringContainsString('[name]', $clause);
         $this->assertStringContainsString('ASC', $clause);
     }
 
@@ -139,8 +139,8 @@ class SqlBuilderTest extends TestCase
         $clause = SqlBuilder::buildOrderByClause($orders, $this->driver);
         
         $this->assertStringContainsString('ORDER BY', $clause);
-        $this->assertStringContainsString('"name"', $clause);
-        $this->assertStringContainsString('"created_at"', $clause);
+        $this->assertStringContainsString('[name]', $clause);
+        $this->assertStringContainsString('[created_at]', $clause);
         $this->assertStringContainsString('ASC', $clause);
         $this->assertStringContainsString('DESC', $clause);
     }

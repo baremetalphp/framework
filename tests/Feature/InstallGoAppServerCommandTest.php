@@ -21,6 +21,21 @@ class InstallGoAppServerCommandTest extends TestCase
         
         // Change to test directory
         chdir($this->testDir);
+        
+        // Set config path to baremetalphp/config directory
+        // From tests/Feature, go up 3 levels to get to /Users/elliotanderson/php, then add baremetalphp/config
+        $configPath = dirname(__DIR__, 3) . '/baremetalphp/config';
+        \BareMetalPHP\Support\Config::setConfigPath($configPath);
+        
+        // Reset config to reload
+        $reflection = new \ReflectionClass(\BareMetalPHP\Support\Config::class);
+        $property = $reflection->getProperty('config');
+        $property->setAccessible(true);
+        $property->setValue(null, []);
+        
+        $loadedProperty = $reflection->getProperty('loaded');
+        $loadedProperty->setAccessible(true);
+        $loadedProperty->setValue(null, false);
     }
 
     protected function tearDown(): void
@@ -36,6 +51,27 @@ class InstallGoAppServerCommandTest extends TestCase
 
     public function testCanInstallGoServerFiles(): void
     {
+        // Ensure environment variables are cleared for this test
+        putenv('APPSERVER_FAST_WORKERS');
+        putenv('APPSERVER_SLOW_WORKERS');
+        putenv('APPSERVER_HOT_RELOAD');
+        unset($_ENV['APPSERVER_FAST_WORKERS']);
+        unset($_ENV['APPSERVER_SLOW_WORKERS']);
+        unset($_ENV['APPSERVER_HOT_RELOAD']);
+        unset($_SERVER['APPSERVER_FAST_WORKERS']);
+        unset($_SERVER['APPSERVER_SLOW_WORKERS']);
+        unset($_SERVER['APPSERVER_HOT_RELOAD']);
+        
+        // Reset config to ensure fresh load with defaults
+        $reflection = new \ReflectionClass(\BareMetalPHP\Support\Config::class);
+        $configProperty = $reflection->getProperty('config');
+        $configProperty->setAccessible(true);
+        $configProperty->setValue(null, []);
+        
+        $loadedProperty = $reflection->getProperty('loaded');
+        $loadedProperty->setAccessible(true);
+        $loadedProperty->setValue(null, false);
+        
         $command = new InstallGoAppServerCommand();
         
         ob_start();
@@ -144,6 +180,56 @@ class InstallGoAppServerCommandTest extends TestCase
         $this->assertStringContainsString('ResponsePayload', $payloadGo);
     }
 
+    public function testAppServerConfigDefaults(): void
+    {
+        // Ensure config path is set (it should be set in setUp, but ensure it's set)
+        $configPath = dirname(__DIR__, 3) . '/baremetalphp/config';
+        \BareMetalPHP\Support\Config::setConfigPath($configPath);
+        
+        // Reset config state to ensure fresh load
+        $reflection = new \ReflectionClass(\BareMetalPHP\Support\Config::class);
+        $property = $reflection->getProperty('config');
+        $property->setAccessible(true);
+        $property->setValue(null, []);
+        
+        $loadedProperty = $reflection->getProperty('loaded');
+        $loadedProperty->setAccessible(true);
+        $loadedProperty->setValue(null, false);
+        
+        // Verify config path is set before loading
+        $configPathProperty = $reflection->getProperty('configPath');
+        $configPathProperty->setAccessible(true);
+        try {
+            $actualPath = $configPathProperty->getValue();
+            if ($actualPath !== $configPath) {
+                \BareMetalPHP\Support\Config::setConfigPath($configPath);
+            }
+        } catch (\Error $e) {
+            // Property not initialized, set it
+            \BareMetalPHP\Support\Config::setConfigPath($configPath);
+        }
+        
+        // Force config to load
+        \BareMetalPHP\Support\Config::load();
+        
+        $config = \BareMetalPHP\Support\Config::get('appserver');
+        
+        // Also test the helper function
+        $configHelper = config('appserver');
+
+        $this->assertIsArray($config, 'Config::get("appserver") should return an array, got: ' . gettype($config));
+        $this->assertIsArray($configHelper, 'config("appserver") should return an array, got: ' . gettype($configHelper));
+        $this->assertArrayHasKey('fast_workers', $config);
+        $this->assertArrayHasKey('slow_workers', $config);
+        $this->assertArrayHasKey('hot_reload', $config);
+        $this->assertArrayHasKey('static', $config);
+        $this->assertSame(4, $config['fast_workers']);
+        $this->assertSame(2, $config['slow_workers']);
+        $this->assertTrue($config['hot_reload']);
+        $this->assertIsArray($config['static']);
+        $this->assertNotEmpty($config['static']);
+    }
+
     public function testPhpFilesContainCorrectContent(): void
     {
         $command = new InstallGoAppServerCommand();
@@ -170,6 +256,63 @@ class InstallGoAppServerCommandTest extends TestCase
         $this->assertStringContainsString('Application', $bootstrapPhp);
         $this->assertStringContainsString('Kernel', $bootstrapPhp);
     }
+
+    public function testGoConfigFileReflectsAppServerConfig(): void
+    {
+        // Override via env so config('appserver') picks it up
+        putenv('APPSERVER_FAST_WORKERS=8');
+        putenv('APPSERVER_SLOW_WORKERS=3');
+        putenv('APPSERVER_HOT_RELOAD=0');
+        $_ENV['APPSERVER_FAST_WORKERS'] = '8';
+        $_ENV['APPSERVER_SLOW_WORKERS'] = '3';
+        $_ENV['APPSERVER_HOT_RELOAD'] = '0';
+        $_SERVER['APPSERVER_FAST_WORKERS'] = '8';
+        $_SERVER['APPSERVER_SLOW_WORKERS'] = '3';
+        $_SERVER['APPSERVER_HOT_RELOAD'] = '0';
+        
+        // Reset config to reload environment variables
+        $reflection = new \ReflectionClass(\BareMetalPHP\Support\Config::class);
+        $configProperty = $reflection->getProperty('config');
+        $configProperty->setAccessible(true);
+        $configProperty->setValue(null, []);
+        
+        $loadedProperty = $reflection->getProperty('loaded');
+        $loadedProperty->setAccessible(true);
+        $loadedProperty->setValue(null, false);
+        
+        // Force config to load and then override with our test values
+        \BareMetalPHP\Support\Config::get('appserver'); // This loads the config
+        \BareMetalPHP\Support\Config::set('appserver.fast_workers', 8);
+        \BareMetalPHP\Support\Config::set('appserver.slow_workers', 3);
+        \BareMetalPHP\Support\Config::set('appserver.hot_reload', false);
+
+        $command = new InstallGoAppServerCommand();
+
+        $command->handle([]);
+
+        $config = json_decode(
+            file_get_contents($this->testDir . '/go_appserver.json'),
+            true
+        );
+
+        $this->assertEquals(8, $config['fast_workers']);
+        $this->assertEquals(3, $config['slow_workers']);
+        $this->assertFalse($config['hot_reload']);
+        $this->assertIsArray($config['static']);
+        $this->assertNotEmpty($config['static']);
+        
+        // Clean up environment variables
+        putenv('APPSERVER_FAST_WORKERS');
+        putenv('APPSERVER_SLOW_WORKERS');
+        putenv('APPSERVER_HOT_RELOAD');
+        unset($_ENV['APPSERVER_FAST_WORKERS']);
+        unset($_ENV['APPSERVER_SLOW_WORKERS']);
+        unset($_ENV['APPSERVER_HOT_RELOAD']);
+        unset($_SERVER['APPSERVER_FAST_WORKERS']);
+        unset($_SERVER['APPSERVER_SLOW_WORKERS']);
+        unset($_SERVER['APPSERVER_HOT_RELOAD']);
+    }
+
 
     public function testGoModUsesCorrectModuleName(): void
     {

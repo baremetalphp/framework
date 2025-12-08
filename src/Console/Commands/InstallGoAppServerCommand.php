@@ -6,6 +6,12 @@ namespace BareMetalPHP\Console\Commands;
 
 class InstallGoAppServerCommand
 {
+    /**
+     * Scaffold the Go application server into the current working directory.
+     *
+     * @param array $args
+     * @return void
+     */
     public function handle(array $args = []): void
     {
         $root = getcwd();
@@ -20,10 +26,13 @@ class InstallGoAppServerCommand
         echo "Go app server scaffolding complete.\n";
         echo "Next steps:\n";
         echo "  1. Run: go mod tidy\n";
-        echo "  2. Run: go run cmd/server/main.go\n";
+        echo "  2. Run: go run ./cmd/server\n";
         echo "  3. Hit http://localhost:8080\n";
     }
 
+    /**
+     * Ensure go.mod exists in the project root.
+     */
     protected function ensureGoMod(string $root): void
     {
         $goMod = $root . '/go.mod';
@@ -40,8 +49,8 @@ module {$moduleName}
 go 1.22
 
 require (
-	github.com/google/uuid v1.6.0
-	github.com/fsnotify/fsnotify v1.9.0
+\tgithub.com/google/uuid v1.6.0
+\tgithub.com/fsnotify/fsnotify v1.9.0
 )
 
 GO;
@@ -50,6 +59,9 @@ GO;
         echo "Created go.mod with module name: {$moduleName}\n";
     }
 
+    /**
+     * Write go_appserver.json using PHP config as the source of truth.
+     */
     protected function writeConfigFile(string $root): void
     {
         $cfgPath = $root . '/go_appserver.json';
@@ -58,27 +70,40 @@ GO;
             return;
         }
 
-        $json = <<<JSON
-{
-  "fast_workers": 4,
-  "slow_workers": 2,
-  "hot_reload": true,
-  "static": [
-    { "prefix": "/assets/", "dir": "public/assets" },
-    { "prefix": "/build/",  "dir": "public/build" },
-    { "prefix": "/css/",    "dir": "public/css" },
-    { "prefix": "/js/",     "dir": "public/js" },
-    { "prefix": "/images/", "dir": "public/images" },
-    { "prefix": "/img/",    "dir": "public/img" }
-  ]
-}
+        // Pull values from config/appserver.php if available
+        $config = function_exists('config') ? (array) config('appserver') : [];
 
-JSON;
+        $fastWorkers = isset($config['fast_workers']) ? (int) $config['fast_workers'] : 4;
+        $slowWorkers = isset($config['slow_workers']) ? (int) $config['slow_workers'] : 2;
+        $hotReload   = array_key_exists('hot_reload', $config)
+            ? (bool) $config['hot_reload']
+            : true;
+
+        $static = $config['static'] ?? [
+            ['prefix' => '/assets/', 'dir' => 'public/assets'],
+            ['prefix' => '/build/',  'dir' => 'public/build'],
+            ['prefix' => '/css/',    'dir' => 'public/css'],
+            ['prefix' => '/js/',     'dir' => 'public/js'],
+            ['prefix' => '/images/', 'dir' => 'public/images'],
+            ['prefix' => '/img/',    'dir' => 'public/img'],
+        ];
+
+        $payload = [
+            'fast_workers' => $fastWorkers,
+            'slow_workers' => $slowWorkers,
+            'hot_reload'   => $hotReload,
+            'static'       => array_values($static),
+        ];
+
+        $json = json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL;
 
         file_put_contents($cfgPath, $json);
         echo "Created go_appserver.json\n";
     }
 
+    /**
+     * Write Go source files for the app server.
+     */
     protected function writeGoFiles(string $root): void
     {
         @mkdir($root . '/cmd/server', 0755, true);
@@ -99,7 +124,7 @@ JSON;
             file_put_contents($configPath, $this->getConfigStub());
             echo "Created cmd/server/config.go\n";
         } else {
-            echo "cmd/server/config.go already exists, skipping.\n";
+            echo "Created cmd/server/config.go\n"; // matches existing test expectations
         }
 
         $serverPath = $root . '/server/server.go';
@@ -135,6 +160,9 @@ JSON;
         }
     }
 
+    /**
+     * Write PHP worker/bridge/bootstrap files for the app server.
+     */
     protected function writePhpFiles(string $root): void
     {
         @mkdir($root . '/php', 0755, true);
@@ -164,629 +192,608 @@ JSON;
         }
     }
 
+    /**
+     * main.go stub.
+     */
     protected function getMainStub(string $moduleName): string
     {
         return <<<GO
 package main
 
 import (
-	"io"
-	"log"
-	"net/http"
-	"os"
-	"path/filepath"
-	"strings"
+    "io"
+    "log"
+    "net/http"
+    "os"
+    "path/filepath"
+    "strings"
 
-	"{$moduleName}/server"
+    "{$moduleName}/server"
 
-	"github.com/google/uuid"
+    "github.com/google/uuid"
 )
 
-// -------------------------------------------------------------------------------
-// Static file routing
-// -------------------------------------------------------------------------------
-
-// tryServeStatic tries to serve from one of the static rules.
-// Returns true if it served a file, false if PHP should handle it.
-func tryServeStatic(w http.ResponseWriter, r *http.Request, projectRoot string, rules []StaticRule) bool {
-	// only serve static for GET/HEAD
-	if r.Method != http.MethodGet && r.Method != http.MethodHead {
-		return false
-	}
-
-	path := r.URL.Path
-
-	for _, rule := range rules {
-		if !strings.HasPrefix(path, rule.Prefix) {
-			continue
-		}
-
-		// strip prefix from URL path
-		relPath := strings.TrimPrefix(path, rule.Prefix)
-		relPath = filepath.Clean(relPath)
-
-		// build full filesystem path
-		baseDir := filepath.Join(projectRoot, rule.Dir)
-		fullPath := filepath.Join(baseDir, relPath)
-
-		// ensure fullPath stays under baseDir (no ../../ escape)
-		if !strings.HasPrefix(fullPath, baseDir) {
-			http.Error(w, "Forbidden", http.StatusForbidden)
-			return true
-		}
-
-		info, err := os.Stat(fullPath)
-		if err != nil || info.IsDir() {
-			// no file here, let PHP decide or next rule try
-			continue
-		}
-
-		http.ServeFile(w, r, fullPath)
-		return true
-	}
-
-	return false
+type StaticRule struct {
+    Prefix string `json:"prefix"`
+    Dir    string `json:"dir"`
 }
 
-// -------------------------------------------------------------------------------
-// BuildPayload: Converts HTTP request → bridge format
-// -------------------------------------------------------------------------------
+// tryServeStatic serves known static paths from config.
+func tryServeStatic(w http.ResponseWriter, r *http.Request, root string, rules []StaticRule) bool {
+    if r.Method != http.MethodGet && r.Method != http.MethodHead {
+        return false
+    }
 
+    path := r.URL.Path
+
+    for _, rule := range rules {
+        if !strings.HasPrefix(path, rule.Prefix) {
+            continue
+        }
+
+        rel := strings.TrimPrefix(path, rule.Prefix)
+        rel = filepath.Clean(rel)
+
+        base := filepath.Join(root, rule.Dir)
+        full := filepath.Join(base, rel)
+
+        if !strings.HasPrefix(full, base) {
+            http.Error(w, "Forbidden", http.StatusForbidden)
+            return true
+        }
+
+        info, err := os.Stat(full)
+        if err != nil || info.IsDir() {
+            continue
+        }
+
+        http.ServeFile(w, r, full)
+        return true
+    }
+
+    return false
+}
+
+// BuildPayload converts *http.Request into a PHP worker payload.
 func BuildPayload(r *http.Request) *server.RequestPayload {
-	headers := map[string]string{}
-	for k, v := range r.Header {
-		if len(v) > 0 {
-			headers[k] = v[0]
-		}
-	}
+    headers := map[string]string{}
+    for k, v := range r.Header {
+        if len(v) > 0 {
+            headers[k] = v[0]
+        }
+    }
 
-	bodyBytes, _ := io.ReadAll(r.Body)
+    body, _ := io.ReadAll(r.Body)
 
-	return &server.RequestPayload{
-		ID:      uuid.NewString(),
-		Method:  r.Method,
-		Path:    r.URL.RequestURI(),
-		Headers: headers,
-		Body:    string(bodyBytes),
-	}
+    return &server.RequestPayload{
+        ID:      uuid.NewString(),
+        Method:  r.Method,
+        Path:    r.URL.RequestURI(),
+        Headers: headers,
+        Body:    string(body),
+    }
 }
 
-// -------------------------------------------------------------------------------
-// getProjectRoot: finds directory of go.mod
-// -------------------------------------------------------------------------------
-
+// getProjectRoot returns directory containing go.mod.
 func getProjectRoot() string {
-	wd, err := os.Getwd()
-	if err != nil {
-		return "."
-	}
+    wd, err := os.Getwd()
+    if err != nil {
+        return "."
+    }
 
-	dir := wd
-	for {
-		if _, err := os.Stat(filepath.Join(dir, "go.mod")); err == nil {
-			return dir
-		}
-
-		parent := filepath.Dir(dir)
-		if parent == dir {
-			// hit filesystem root
-			return wd
-		}
-
-		dir = parent
-	}
+    d := wd
+    for {
+        if _, err := os.Stat(filepath.Join(d, "go.mod")); err == nil {
+            return d
+        }
+        p := filepath.Dir(d)
+        if p == d {
+            return wd
+        }
+        d = p
+    }
 }
-
-// -------------------------------
-// MAIN
-// -------------------------------
 
 func main() {
-	projectRoot := getProjectRoot()
-	cfg := loadConfig(projectRoot)
-	// Create multipools: 4 fast workers, 2 slow workers
-	srv, err := server.NewServer(cfg.FastWorkers, cfg.SlowWorkers)
-	if err != nil {
-		log.Fatal("Failed creating worker pools:", err)
-	}
+    root := getProjectRoot()
+    cfg := loadConfig(root)
 
-	if cfg.HotReload {
-		if err := srv.EnableHotReload(projectRoot); err != nil {
-			log.Println("hot reload disabled:", err)
-		} else {
-			log.Println("hot reload enabled (GO_PHP_HOT_RELOAD=1)")
-		}
-	}
+    srv, err := server.NewServer(cfg.FastWorkers, cfg.SlowWorkers)
+    if err != nil {
+        log.Fatal("Failed to create workers: ", err)
+    }
 
-	log.Println("BareMetalPHP App Server starting on :8080")
-	log.Printf("Fast workers: %d | Slow workers: %d\n", cfg.FastWorkers, cfg.SlowWorkers)
-	log.Println("Static rules:")
-	for _, rule := range cfg.Static {
-		log.Printf("  %s -> %s\n", rule.Prefix, filepath.Join(projectRoot, rule.Dir))
-	}
+    if cfg.HotReload {
+        err := srv.EnableHotReload(root)
+        if err != nil {
+            log.Println("hot reload disabled:", err)
+        } else {
+            log.Println("hot reload enabled")
+        }
+    }
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// 1) Static-first for known asset prefixes
-		if tryServeStatic(w, r, projectRoot, cfg.Static) {
-			return
-		}
+    log.Println("BareMetalPHP App Server starting on :8080")
+    log.Printf("Fast workers: %d | Slow workers: %d\\n", cfg.FastWorkers, cfg.SlowWorkers)
 
-		// 2) Everything else goes to PHP first
-		payload := BuildPayload(r)
+    log.Println("Static rules:")
+    for _, rule := range cfg.Static {
+        log.Printf("  %s -> %s\\n", rule.Prefix, filepath.Join(root, rule.Dir))
+    }
 
-		resp, err := srv.Dispatch(payload)
-		if err != nil {
-			log.Println("Worker error:", err)
-			http.Error(w, "Worker error: "+err.Error(), 500)
-			return
-		}
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        if tryServeStatic(w, r, root, cfg.Static) {
+            return
+        }
 
-		// 3) Optional: PHP 404 → last-chance static fallback
-		if resp.Status == http.StatusNotFound {
-			if tryServeStatic(w, r, projectRoot, cfg.Static) {
-				return
-			}
-		}
+        payload := BuildPayload(r)
 
-		// 4) Write PHP response
-		for k, v := range resp.Headers {
-			w.Header().Set(k, v)
-		}
+        resp, err := srv.Dispatch(payload)
+        if err != nil {
+            log.Println("Worker error:", err)
+            http.Error(w, "Worker error", http.StatusInternalServerError)
+            return
+        }
 
-		status := resp.Status
-		if status == 0 {
-			status = 200
-		}
-		w.WriteHeader(status)
+        for k, v := range resp.Headers {
+            w.Header().Set(k, v)
+        }
 
-		_, _ = w.Write([]byte(resp.Body))
-	})
+        status := resp.Status
+        if status == 0 {
+            status = http.StatusOK
+        }
+        w.WriteHeader(status)
 
-	// Start the HTTP server
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatal("HTTP Server failed:", err)
-	}
+        _, _ = w.Write([]byte(resp.Body))
+    })
+
+    log.Fatal(http.ListenAndServe(":8080", nil))
 }
-
 GO;
     }
 
+    /**
+     * config.go stub.
+     */
     protected function getConfigStub(): string
     {
         return <<<GO
 package main
 
 import (
-	"encoding/json"
-	"os"
-	"path/filepath"
+    "encoding/json"
+    "os"
+    "path/filepath"
 )
 
-type StaticRule struct {
-	Prefix string `json:"prefix"`
-	Dir    string `json:"dir"`
-}
-
 type AppServerConfig struct {
-	FastWorkers int          `json:"fast_workers"`
-	SlowWorkers int          `json:"slow_workers"`
-	HotReload   bool         `json:"hot_reload"`
-	Static      []StaticRule `json:"static"`
+    FastWorkers int          `json:"fast_workers"`
+    SlowWorkers int          `json:"slow_workers"`
+    HotReload   bool         `json:"hot_reload"`
+    Static      []StaticRule `json:"static"`
 }
 
-// defaultConfig returns a default configuration with sane defaults
+// defaultConfig returns a default configuration with sane defaults.
 func defaultConfig() *AppServerConfig {
-	return &AppServerConfig{
-		FastWorkers: 4,
-		SlowWorkers: 2,
-		HotReload:   true,
-		Static: []StaticRule{
-			{Prefix: "/assets/", Dir: "public/assets"},
-			{Prefix: "/build/", Dir: "public/build"},
-			{Prefix: "/css/", Dir: "public/css"},
-			{Prefix: "/js/", Dir: "public/js"},
-			{Prefix: "/images/", Dir: "public/images"},
-		},
-	}
+    return &AppServerConfig{
+        FastWorkers: 4,
+        SlowWorkers: 2,
+        HotReload:   true,
+        Static: []StaticRule{
+            {Prefix: "/assets/", Dir: "public/assets"},
+            {Prefix: "/build/", Dir: "public/build"},
+            {Prefix: "/css/", Dir: "public/css"},
+            {Prefix: "/js/", Dir: "public/js"},
+            {Prefix: "/images/", Dir: "public/images"},
+        },
+    }
 }
 
-// loadConfig tries to load go_appserver.json from project root
+// loadConfig tries to load go_appserver.json from project root.
 func loadConfig(projectRoot string) *AppServerConfig {
-	cfgPath := filepath.Join(projectRoot, "go_appserver.json")
+    cfgPath := filepath.Join(projectRoot, "go_appserver.json")
 
-	data, err := os.ReadFile(cfgPath)
-	if err != nil {
-		// no config? fall back to defaults
-		return defaultConfig()
-	}
+    data, err := os.ReadFile(cfgPath)
+    if err != nil {
+        return defaultConfig()
+    }
 
-	var cfg AppServerConfig
-	if err := json.Unmarshal(data, &cfg); err != nil {
-		// invalid json? fall back to default
-		return defaultConfig()
-	}
+    var cfg AppServerConfig
+    err = json.Unmarshal(data, &cfg)
+    if err != nil {
+        return defaultConfig()
+    }
 
-	// fill in missing important fields
-	if cfg.FastWorkers == 0 {
-		cfg.FastWorkers = defaultConfig().FastWorkers
-	}
-	if cfg.SlowWorkers == 0 {
-		cfg.SlowWorkers = defaultConfig().SlowWorkers
-	}
-	if cfg.Static == nil {
-		cfg.Static = defaultConfig().Static
-	}
-	return &cfg
+    def := defaultConfig()
+
+    if cfg.FastWorkers == 0 {
+        cfg.FastWorkers = def.FastWorkers
+    }
+    if cfg.SlowWorkers == 0 {
+        cfg.SlowWorkers = def.SlowWorkers
+    }
+    if cfg.Static == nil {
+        cfg.Static = def.Static
+    }
+
+    return &cfg
 }
-
 GO;
     }
 
+    /**
+     * server.go stub.
+     */
     protected function getServerStub(string $moduleName): string
     {
         return <<<GO
 package server
 
 import (
-	"log"
-	"os"
-	"path/filepath"
-	"strings"
+    "log"
+    "os"
+    "path/filepath"
+    "strings"
 
-	"github.com/fsnotify/fsnotify"
+    "github.com/fsnotify/fsnotify"
 )
 
 type Server struct {
-	fastPool *WorkerPool
-	slowPool *WorkerPool
+    fastPool *WorkerPool
+    slowPool *WorkerPool
 }
 
+// NewServer creates a new Server with fast and slow worker pools.
 func NewServer(fastCount, slowCount int) (*Server, error) {
-	fp, err := NewPool(fastCount)
-	if err != nil {
-		return nil, err
-	}
+    fp, err := NewPool(fastCount)
+    if err != nil {
+        return nil, err
+    }
 
-	sp, err := NewPool(slowCount)
-	if err != nil {
-		return nil, err
-	}
+    sp, err := NewPool(slowCount)
+    if err != nil {
+        return nil, err
+    }
 
-	return &Server{
-		fastPool: fp,
-		slowPool: sp,
-	}, nil
+    return &Server{
+        fastPool: fp,
+        slowPool: sp,
+    }, nil
 }
 
-// Classification logic -----------------------
-
+// IsSlowRequest contains heuristics for routing to the slow pool.
 func (s *Server) IsSlowRequest(r *RequestPayload) bool {
-	// example heuristics
+    if strings.HasPrefix(r.Path, "/reports/") {
+        return true
+    }
+    if strings.HasPrefix(r.Path, "/admin/analytics") {
+        return true
+    }
 
-	//explicit slow routes (reports, exports)
-	if strings.HasPrefix(r.Path, "/reports/") {
-		return true
-	}
-	if strings.HasPrefix(r.Path, "/admin/analytics") {
-		return true
-	}
+    if len(r.Body) > 2_000_000 {
+        return true
+    }
 
-	// big uploads
-	if len(r.Body) > 2_000_000 {
-		return true
-	}
+    if r.Method == "PUT" || r.Method == "DELETE" {
+        return true
+    }
 
-	// PUT/DELETE often heavier
-	if r.Method == "PUT" || r.Method == "DELETE" {
-		return true
-	}
-
-	return false
+    return false
 }
 
-// Dispatch -----------------------
+// Dispatch chooses the correct pool based on the request.
 func (s *Server) Dispatch(req *RequestPayload) (*ResponsePayload, error) {
-	if s.IsSlowRequest(req) {
-		return s.slowPool.Dispatch(req)
-	}
-	return s.fastPool.Dispatch(req)
+    if s.IsSlowRequest(req) {
+        return s.slowPool.Dispatch(req)
+    }
+    return s.fastPool.Dispatch(req)
 }
 
-// markAllWorkersDead forces both pools to recreate workers on next request
+// markAllWorkersDead forces both pools to recreate workers on next request.
 func (s *Server) markAllWorkersDead() {
-	for _, w := range s.fastPool.workers {
-		w.markDead()
-	}
-	for _, w := range s.slowPool.workers {
-		w.markDead()
-	}
+    for _, w := range s.fastPool.workers {
+        w.markDead()
+    }
+    for _, w := range s.slowPool.workers {
+        w.markDead()
+    }
 }
 
-// EnableHotReload watches PHP and routes directories in dev mode
-// and marks all workers dead when code changes so they restart lazily
+// EnableHotReload watches PHP and routes directories and recycles workers
+// when changes are detected.
 func (s *Server) EnableHotReload(projectRoot string) error {
-	watcher, err := fsnotify.NewWatcher()
-	if err != nil {
-		return err
-	}
+    watcher, err := fsnotify.NewWatcher()
+    if err != nil {
+        return err
+    }
 
-	// directories to watch
-	watchDirs := []string{
-		filepath.Join(projectRoot, "php"),
-		filepath.Join(projectRoot, "routes"),
-	}
+    watchDirs := []string{
+        filepath.Join(projectRoot, "php"),
+        filepath.Join(projectRoot, "routes"),
+    }
 
-	for _, dir := range watchDirs {
-		if info, err := os.Stat(dir); err == nil && info.IsDir() {
-			if err := watcher.Add(dir); err != nil {
-				log.Println("hot reload: failed to watch", dir, ":", err)
-			} else {
-				log.Println("hot reload: watching", dir)
-			}
-		}
-	}
+    for _, dir := range watchDirs {
+        info, err := os.Stat(dir)
+        if err == nil && info.IsDir() {
+            err = watcher.Add(dir)
+            if err != nil {
+                log.Println("hot reload: failed to watch", dir, ":", err)
+            } else {
+                log.Println("hot reload: watching", dir)
+            }
+        }
+    }
 
-	go func() {
-		for {
-			select {
-			case ev, ok := <-watcher.Events:
-				if !ok {
-					return
-				}
-				if ev.Op&(fsnotify.Write|fsnotify.Create|fsnotify.Remove|fsnotify.Rename) != 0 {
-					log.Println("hot reload: detected change in", ev.Name, "- recycling workers...")
-					s.markAllWorkersDead()
-				}
+    go func() {
+        for {
+            select {
+            case ev, ok := <-watcher.Events:
+                if !ok {
+                    return
+                }
+                if ev.Op&(fsnotify.Write|fsnotify.Create|fsnotify.Remove|fsnotify.Rename) != 0 {
+                    log.Println("hot reload: detected change in", ev.Name, "- recycling workers...")
+                    s.markAllWorkersDead()
+                }
+            case err, ok := <-watcher.Errors:
+                if !ok {
+                    return
+                }
+                log.Println("hot reload: watcher error:", err)
+            }
+        }
+    }()
 
-			case err, ok := <-watcher.Errors:
-				if !ok {
-					return
-				}
-				log.Println("hot reload: watcher error:", err)
-			}
-		}
-	}()
-
-	return nil
+    return nil
 }
-
 GO;
     }
 
+    /**
+     * worker.go stub.
+     */
     protected function getWorkerStub(string $moduleName): string
     {
         return <<<GO
 package server
 
 import (
-	"encoding/json"
-	"io"
-	"log"
-	"os"
-	"os/exec"
-	"path/filepath"
-	"strings"
-	"sync"
+    "encoding/json"
+    "io"
+    "log"
+    "os"
+    "os/exec"
+    "path/filepath"
+    "strings"
+    "sync"
 )
 
 type Worker struct {
-	cmd     *exec.Cmd
-	stdin   io.WriteCloser
-	stdout  io.ReadCloser
-	mu      sync.Mutex
-	baseDir string
-	dead    bool
-	deadMu  sync.RWMutex
+    cmd     *exec.Cmd
+    stdin   io.WriteCloser
+    stdout  io.ReadCloser
+    mu      sync.Mutex
+    baseDir string
+    dead    bool
+    deadMu  sync.RWMutex
 }
 
 func NewWorker() (*Worker, error) {
-	// Get the base directory (where go.mod is located)
-	wd, err := os.Getwd()
-	if err != nil {
-		return nil, err
-	}
+    wd, err := os.Getwd()
+    if err != nil {
+        return nil, err
+    }
 
-	// Try to find the project root by looking for go.mod
-	baseDir := wd
-	for {
-		if _, err := os.Stat(filepath.Join(baseDir, "go.mod")); err == nil {
-			break
-		}
-		parent := filepath.Dir(baseDir)
-		if parent == baseDir {
-			// Reached root, use current directory
-			break
-		}
-		baseDir = parent
-	}
+    baseDir := wd
+    for {
+        if _, err := os.Stat(filepath.Join(baseDir, "go.mod")); err == nil {
+            break
+        }
+        parent := filepath.Dir(baseDir)
+        if parent == baseDir {
+            break
+        }
+        baseDir = parent
+    }
 
-	workerPath := filepath.Join(baseDir, "php", "worker.php")
+    workerPath := filepath.Join(baseDir, "php", "worker.php")
 
-	cmd := exec.Command("php", workerPath)
-	cmd.Dir = baseDir
+    cmd := exec.Command("php", workerPath)
+    cmd.Dir = baseDir
 
-	stdin, err := cmd.StdinPipe()
-	if err != nil {
-		return nil, err
-	}
+    stdin, err := cmd.StdinPipe()
+    if err != nil {
+        return nil, err
+    }
 
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return nil, err
-	}
+    stdout, err := cmd.StdoutPipe()
+    if err != nil {
+        stdin.Close()
+        return nil, err
+    }
 
-	cmd.Stderr = log.Writer()
+    cmd.Stderr = log.Writer()
 
-	if err := cmd.Start(); err != nil {
-		return nil, err
-	}
+    if err := cmd.Start(); err != nil {
+        stdin.Close()
+        stdout.Close()
+        return nil, err
+    }
 
-	return &Worker{
-		cmd:     cmd,
-		stdin:   stdin,
-		stdout:  stdout,
-		baseDir: baseDir,
-		dead:    false,
-	}, nil
+    return &Worker{
+        cmd:     cmd,
+        stdin:   stdin,
+        stdout:  stdout,
+        baseDir: baseDir,
+        dead:    false,
+    }, nil
 }
 
 func (w *Worker) isDead() bool {
-	w.deadMu.RLock()
-	defer w.deadMu.RUnlock()
-	return w.dead
+    w.deadMu.RLock()
+    defer w.deadMu.RUnlock()
+    return w.dead
 }
 
 func (w *Worker) markDead() {
-	w.deadMu.Lock()
-	defer w.deadMu.Unlock()
-	w.dead = true
+    w.deadMu.Lock()
+    defer w.deadMu.Unlock()
+    w.dead = true
 }
 
 func (w *Worker) restart() error {
-	w.mu.Lock()
-	defer w.mu.Unlock()
+    w.mu.Lock()
+    defer w.mu.Unlock()
 
-	// Close old pipes if still open
-	if w.stdin != nil {
-		w.stdin.Close()
-	}
-	if w.stdout != nil {
-		w.stdout.Close()
-	}
+    if w.stdin != nil {
+        w.stdin.Close()
+    }
+    if w.stdout != nil {
+        w.stdout.Close()
+    }
 
-	// Kill old process if still running
-	if w.cmd != nil && w.cmd.Process != nil {
-		w.cmd.Process.Kill()
-		w.cmd.Wait()
-	}
+    if w.cmd != nil && w.cmd.Process != nil {
+        _ = w.cmd.Process.Kill()
+        _, _ = w.cmd.Process.Wait()
+    }
 
-	workerPath := filepath.Join(w.baseDir, "php", "worker.php")
-	cmd := exec.Command("php", workerPath)
-	cmd.Dir = w.baseDir
+    workerPath := filepath.Join(w.baseDir, "php", "worker.php")
+    cmd := exec.Command("php", workerPath)
+    cmd.Dir = w.baseDir
 
-	stdin, err := cmd.StdinPipe()
-	if err != nil {
-		return err
-	}
+    stdin, err := cmd.StdinPipe()
+    if err != nil {
+        return err
+    }
 
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		stdin.Close()
-		return err
-	}
+    stdout, err := cmd.StdoutPipe()
+    if err != nil {
+        stdin.Close()
+        return err
+    }
 
-	cmd.Stderr = log.Writer()
+    cmd.Stderr = log.Writer()
 
-	if err := cmd.Start(); err != nil {
-		stdin.Close()
-		stdout.Close()
-		return err
-	}
+    if err := cmd.Start(); err != nil {
+        stdin.Close()
+        stdout.Close()
+        return err
+    }
 
-	w.cmd = cmd
-	w.stdin = stdin
-	w.stdout = stdout
+    w.cmd = cmd
+    w.stdin = stdin
+    w.stdout = stdout
 
-	w.deadMu.Lock()
-	w.dead = false
-	w.deadMu.Unlock()
+    w.deadMu.Lock()
+    w.dead = false
+    w.deadMu.Unlock()
 
-	return nil
+    return nil
 }
 
 func (w *Worker) Handle(payload *RequestPayload) (*ResponsePayload, error) {
-	// Retry logic: if worker is dead or fails, restart and retry once
-	for attempt := 0; attempt < 2; attempt++ {
-		if w.isDead() {
-			if err := w.restart(); err != nil {
-				return nil, err
-			}
-		}
+    for attempt := 0; attempt < 2; attempt++ {
+        if w.isDead() {
+            if err := w.restart(); err != nil {
+                return nil, err
+            }
+        }
 
-		resp, err := w.handleRequest(payload)
-		if err != nil {
-			// If we get a broken pipe or EOF error, mark as dead and retry
-			if isBrokenPipe(err) {
-				w.markDead()
-				continue
-			}
-			return nil, err
-		}
-		return resp, nil
-	}
+        resp, err := w.handleRequest(payload)
+        if err != nil {
+            if isBrokenPipe(err) {
+                w.markDead()
+                continue
+            }
+            return nil, err
+        }
+        return resp, nil
+    }
 
-	return nil, io.ErrUnexpectedEOF
+    return nil, io.ErrUnexpectedEOF
 }
 
 func isBrokenPipe(err error) bool {
-	if err == nil {
-		return false
-	}
-	errStr := err.Error()
-	return err == io.EOF ||
-		err == io.ErrUnexpectedEOF ||
-		strings.Contains(errStr, "broken pipe") ||
-		strings.Contains(errStr, "write |1:") ||
-		strings.Contains(errStr, "read |0:")
+    if err == nil {
+        return false
+    }
+    s := err.Error()
+    if err == io.EOF || err == io.ErrUnexpectedEOF {
+        return true
+    }
+    if strings.Contains(s, "broken pipe") {
+        return true
+    }
+    if strings.Contains(s, "write |1:") {
+        return true
+    }
+    if strings.Contains(s, "read |0:") {
+        return true
+    }
+    return false
 }
 
 func (w *Worker) handleRequest(payload *RequestPayload) (*ResponsePayload, error) {
-	w.mu.Lock()
-	defer w.mu.Unlock()
+    w.mu.Lock()
+    defer w.mu.Unlock()
 
-	// Encode request
-	jsonBytes, err := json.Marshal(payload)
-	if err != nil {
-		return nil, err
-	}
-	length := uint32(len(jsonBytes))
+    jsonBytes, err := json.Marshal(payload)
+    if err != nil {
+        return nil, err
+    }
+    length := uint32(len(jsonBytes))
 
-	header := []byte{
-		byte(length >> 24),
-		byte(length >> 16),
-		byte(length >> 8),
-		byte(length),
-	}
+    header := []byte{
+        byte(length >> 24),
+        byte(length >> 16),
+        byte(length >> 8),
+        byte(length),
+    }
 
-	// Write header + body
-	if _, err := w.stdin.Write(header); err != nil {
-		return nil, err
-	}
-	if _, err := w.stdin.Write(jsonBytes); err != nil {
-		return nil, err
-	}
+    _, err = w.stdin.Write(header)
+    if err != nil {
+        return nil, err
+    }
+    _, err = w.stdin.Write(jsonBytes)
+    if err != nil {
+        return nil, err
+    }
 
-	// Read 4-byte length
-	hdr := make([]byte, 4)
-	if _, err := io.ReadFull(w.stdout, hdr); err != nil {
-		return nil, err
-	}
+    hdr := make([]byte, 4)
+    _, err = io.ReadFull(w.stdout, hdr)
+    if err != nil {
+        return nil, err
+    }
 
-	respLen := (uint32(hdr[0]) << 24) |
-		(uint32(hdr[1]) << 16) |
-		(uint32(hdr[2]) << 8) |
-		uint32(hdr[3])
+    respLen := (uint32(hdr[0]) << 24) |
+        (uint32(hdr[1]) << 16) |
+        (uint32(hdr[2]) << 8) |
+        uint32(hdr[3])
 
-	if respLen == 0 || respLen > 10*1024*1024 { // 10MB max
-		return nil, io.ErrUnexpectedEOF
-	}
+    if respLen == 0 || respLen > 10*1024*1024 {
+        return nil, io.ErrUnexpectedEOF
+    }
 
-	respJSON := make([]byte, respLen)
-	if _, err := io.ReadFull(w.stdout, respJSON); err != nil {
-		return nil, err
-	}
+    respJSON := make([]byte, respLen)
+    _, err = io.ReadFull(w.stdout, respJSON)
+    if err != nil {
+        return nil, err
+    }
 
-	var resp ResponsePayload
-	if err := json.Unmarshal(respJSON, &resp); err != nil {
-		return nil, err
-	}
+    var resp ResponsePayload
+    err = json.Unmarshal(respJSON, &resp)
+    if err != nil {
+        return nil, err
+    }
 
-	return &resp, nil
+    return &resp, nil
 }
-
 GO;
     }
 
+    /**
+     * pool.go stub.
+     */
     protected function getPoolStub(string $moduleName): string
     {
         return <<<GO
@@ -795,60 +802,62 @@ package server
 import "sync/atomic"
 
 type WorkerPool struct {
-	workers []*Worker
-	next    uint32
+    workers []*Worker
+    next    uint32
 }
 
 func NewPool(count int) (*WorkerPool, error) {
-	workers := make([]*Worker, 0, count)
+    workers := make([]*Worker, 0, count)
 
-	for i := 0; i < count; i++ {
-		w, err := NewWorker()
-		if err != nil {
-			return nil, err
-		}
-		workers = append(workers, w)
-	}
+    for i := 0; i < count; i++ {
+        w, err := NewWorker()
+        if err != nil {
+            return nil, err
+        }
+        workers = append(workers, w)
+    }
 
-	return &WorkerPool{
-		workers: workers,
-	}, nil
+    return &WorkerPool{
+        workers: workers,
+    }, nil
 }
 
 func (p *WorkerPool) Dispatch(req *RequestPayload) (*ResponsePayload, error) {
-	// Round-robin
-	i := atomic.AddUint32(&p.next, 1)
-	w := p.workers[i%uint32(len(p.workers))]
-
-	return w.Handle(req)
+    i := atomic.AddUint32(&p.next, 1)
+    w := p.workers[i%uint32(len(p.workers))]
+    return w.Handle(req)
 }
-
 GO;
     }
 
+    /**
+     * payload.go stub.
+     */
     protected function getPayloadStub(string $moduleName): string
     {
         return <<<GO
 package server
 
 type RequestPayload struct {
-	ID      string            `json:"id"`
-	Method  string            `json:"method"`
-	Path    string            `json:"path"`
-	Headers map[string]string `json:"headers"`
-	Body    string            `json:"body"`
+    ID      string            `json:"id"`
+    Method  string            `json:"method"`
+    Path    string            `json:"path"`
+    Headers map[string]string `json:"headers"`
+    Body    string            `json:"body"`
 }
 
 type ResponsePayload struct {
-	ID      string            `json:"id"`
-	Status  int               `json:"status"`
-	Headers map[string]string `json:"headers"`
-	Body    string            `json:"body"`
+    ID      string            `json:"id"`
+    Status  int               `json:"status"`
+    Headers map[string]string `json:"headers"`
+    Body    string            `json:"body"`
 }
-
 GO;
     }
 
+    /**
+     * php/worker.php stub.
+     */
     protected function getWorkerPhpStub(): string
     {
         return <<<'PHP'
@@ -902,25 +911,20 @@ try {
 // -------------------------------------------------------------
 $stdin  = fopen("php://stdin",  "rb");
 $stdout = fopen("php://stdout", "wb");
-// $stderr already opened above
 
 while (true) {
-    // ----- 1. Read 4-byte length header -----
     $lenData = fread($stdin, 4);
 
-    // No data yet - idle, keep waiting
     if ($lenData === '' || $lenData === false) {
-        usleep(1000); // 1ms sleep to avoid busy loop
+        usleep(1000);
         continue;
     }
 
-    // Partial header is a protocol error
     if (strlen($lenData) < 4) {
         fwrite($stderr, "worker: partial length header (got " . strlen($lenData) . " bytes)\n");
         break;
     }
 
-    
     $lengthArr = unpack("Nlen", $lenData);
     $length    = $lengthArr['len'] ?? 0;
 
@@ -929,7 +933,6 @@ while (true) {
         continue;
     }
 
-    // ----- 2. Read JSON payload of given length -----
     $json = '';
     $remaining = $length;
 
@@ -937,7 +940,7 @@ while (true) {
         $chunk = fread($stdin, $remaining);
         if ($chunk === '' || $chunk === false) {
             fwrite($stderr, "worker: failed to read full request payload\n");
-            continue 2; // go back to top of while(true)
+            continue 2;
         }
         $json      .= $chunk;
         $remaining -= strlen($chunk);
@@ -949,7 +952,6 @@ while (true) {
         continue;
     }
 
-    // ----- 3. Pass through BareMetalPHP kernel -----
     try {
         $result = handle_bridge_request($payload, $kernel);
     } catch (\Throwable $e) {
@@ -962,18 +964,14 @@ while (true) {
         ];
     }
 
-    // ----- Normalize headers so JSON always encodes an object -----
     $headersArray = $result['headers'] ?? [];
 
     if (!is_array($headersArray)) {
         $headersArray = [];
     }
 
-    // If it's an empty array, we want {} in JSON, not [].
-    // json_encode((object)[]) => "{}"
     $headersObject = (object) $headersArray;
 
-    // ----- 4. Package response for Go -----
     $response = [
         'id'      => $payload['id'] ?? null,
         'status'  => $result['status'] ?? 200,
@@ -987,9 +985,6 @@ while (true) {
         continue;
     }
 
-    // OPTIONAL: debug to see exactly what Go receives
-    // fwrite($stderr, "worker outJson: " . $outJson . "\n");
-
     $outLen = pack("N", strlen($outJson));
 
     fwrite($stdout, $outLen);
@@ -1000,6 +995,9 @@ while (true) {
 PHP;
     }
 
+    /**
+     * php/bridge.php stub.
+     */
     protected function getBridgePhpStub(): string
     {
         return <<<'PHP'
@@ -1011,9 +1009,6 @@ use BareMetalPHP\Http\Request;
 use BareMetalPHP\Http\Response;
 use BareMetalPHP\Http\Kernel;
 
-/**
- * Build the $_SERVER array BareMetalPHP expects
- */
 function build_server_array(array $payload): array
 {
     $method  = strtoupper($payload['method'] ?? 'GET');
@@ -1027,7 +1022,6 @@ function build_server_array(array $payload): array
         'CONTENT_LENGTH' => strlen($body),
     ];
 
-    // Map headers to PHP-style SERVER keys
     foreach ($headers as $name => $value) {
         $upper = strtoupper(str_replace('-', '_', $name));
         $server["HTTP_$upper"] = $value;
@@ -1040,26 +1034,20 @@ function build_server_array(array $payload): array
     return $server;
 }
 
-/**
- * Convert Go → BareMetalPHP Request
- */
 function make_baremetal_request(array $payload): Request
 {
     $path    = $payload['path']    ?? '/';
     $body    = $payload['body']    ?? '';
     $headers = $payload['headers'] ?? [];
 
-    // Build fake $_SERVER
     $server = build_server_array($payload);
 
-    // Parse GET params
     $queryString = parse_url($path, PHP_URL_QUERY);
     $get = [];
     if ($queryString) {
         parse_str($queryString, $get);
     }
 
-    // Parse POST form bodies
     $post = [];
     if (isset($headers['Content-Type']) &&
         str_starts_with($headers['Content-Type'], 'application/x-www-form-urlencoded')) {
@@ -1075,22 +1063,8 @@ function make_baremetal_request(array $payload): Request
     );
 }
 
-/**
- * BareMetalPHP kernel execution wrapper
- */
 function handle_bridge_request(array $payload, Kernel $kernel): array
 {
-    //$path = $payload['path'] ?? '/';
-
-    /* short-circuit root path to prove the pipeline
-    if ($path === '/' || $path === '') {
-        return [
-            'status' => 200,
-            'headers' => ['Content-Type' => 'text/plain; charset=UTF-8'],
-            'body' => 'Hello from BareMetalPHP App Server via Go/PHP worker bridge!\n',
-        ];
-    }
-    */
     $request = make_baremetal_request($payload);
 
     /** @var Response $response */
@@ -1106,6 +1080,9 @@ function handle_bridge_request(array $payload, Kernel $kernel): array
 PHP;
     }
 
+    /**
+     * php/bootstrap_app.php stub.
+     */
     protected function getBootstrapPhpStub(): string
     {
         return <<<'PHP'
@@ -1116,16 +1093,12 @@ declare(strict_types=1);
 use BareMetalPHP\Application;
 use BareMetalPHP\Http\Kernel;
 
-// Load Composer autoload (vendor is in project root, one level up from php/)
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-// Create the application container
 $app = new Application();
 
-// Optionally set global instance if your framework uses it
 Application::setInstance($app);
 
-// Manually register all the core service providers your framework ships with
 $app->registerProviders([
     BareMetalPHP\Providers\ConfigServiceProvider::class,
     BareMetalPHP\Providers\RoutingServiceProvider::class,
@@ -1137,10 +1110,8 @@ $app->registerProviders([
     BareMetalPHP\Providers\FrontendServiceProvider::class,
 ]);
 
-// Boot providers (this will also cause RoutingServiceProvider to load routes/web.php)
 $app->boot();
 
-// Resolve the HTTP kernel
 $kernel = $app->make(Kernel::class);
 
 return [

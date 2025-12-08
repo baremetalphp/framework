@@ -27,6 +27,15 @@ class Config
             static::$configPath = dirname(__DIR__, 2) . '/config';
         }
 
+        // Ensure helper functions are loaded before requiring config files
+        // Config files use env() and config() functions
+        if (!function_exists('env')) {
+            $helpersPath = __DIR__ . '/helpers.php';
+            if (file_exists($helpersPath)) {
+                require_once $helpersPath;
+            }
+        }
+
         // Load all PHP files from config directory
         if (is_dir(static::$configPath)) {
             $files = glob(static::$configPath . '/*.php');

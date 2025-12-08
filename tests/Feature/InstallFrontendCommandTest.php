@@ -21,6 +21,17 @@ class InstallFrontendCommandTest extends TestCase
         // Change to test directory so getcwd() returns it
         chdir($this->testDir);
         
+        // Clean up any existing files from previous tests
+        $viteConfigPath = base_path('vite.config.js');
+        if (file_exists($viteConfigPath)) {
+            unlink($viteConfigPath);
+        }
+        
+        $packageJsonPath = base_path('package.json');
+        if (file_exists($packageJsonPath)) {
+            unlink($packageJsonPath);
+        }
+        
         // Create a minimal structure that base_path() might expect
         // base_path() uses dirname(__DIR__, 2) from helpers.php location
         // For testing, we'll ensure the command uses getcwd() or we override base_path
@@ -37,6 +48,18 @@ class InstallFrontendCommandTest extends TestCase
 
     public function testCanInstallReactFrontend(): void
     {
+        // Clean up any existing vite config from previous tests
+        $viteConfigPath = base_path('vite.config.js');
+        if (file_exists($viteConfigPath)) {
+            unlink($viteConfigPath);
+        }
+        
+        // Clean up any existing package.json
+        $packageJsonPath = base_path('package.json');
+        if (file_exists($packageJsonPath)) {
+            unlink($packageJsonPath);
+        }
+        
         $command = new InstallFrontendCommand();
         
         ob_start();
