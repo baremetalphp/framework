@@ -9,7 +9,13 @@ use BareMetalPHP\Database\ConnectionManager;
 use PDO;
 use ArrayAccess;
 use BareMetalPHP\Support\Collection;
-
+use BareMetalPHP\Database\Relations\HasMany;
+use BareMetalPHP\Database\Relations\BelongsTo;
+use BareMetalPHP\Database\Relations\HasOne;
+use BareMetalPHP\Database\Relations\MorphMany;
+use BareMetalPHP\Database\Relations\MorphOne;
+use BareMetalPHP\Database\Relations\MorphTo;
+use BareMetalPHP\Database\Relations\Relation as BaseRelation;
 abstract class Model implements ArrayAccess
 {
     // Constants for common column names
@@ -30,7 +36,28 @@ abstract class Model implements ArrayAccess
 
     protected array $attributes = [];
 
+    /**
+     * Loaded relationship values keyed by relation name.
+     * 
+     * @var array<string, mixed>
+     */
     protected array $relations = [];
+
+    /**
+     * Default relations to eager load for this model.
+     * 
+     * Example in a child model:
+     *     protected array $with = ['posts', 'profile'];
+     * @var array<int, string>
+     */
+    protected array $with = [];
+
+    /**
+     * Whether this model instance should lazily load relationships
+     * when accessed as properties ($user->posts).
+     * @var bool
+     */
+    protected bool $lazyLoading = true;
 
     protected bool $exists = false;
 
@@ -109,10 +136,147 @@ abstract class Model implements ArrayAccess
         
         // Apply global scopes if any
         static::applyGlobalScopes($builder);
+
+        // Apply model's default eager-loaded relations (protected $with = [...] )
+        $instance = new static();
+        if (! empty($instance->with)) {
+            $builder->with($instance->with);
+        }
         
         return $builder;
     }
 
+    /**
+     * Eager load one or more relationships on this model instance.
+     * 
+     * Example:
+     *     $user->load('posts', 'profile')
+     * @param string|array[] $relations
+     * @return Model
+     */
+    public function load(string|array ...$relations): static
+    {
+        if (count($relations) === 1 && is_array($relations)) {
+            $relations = $relations[0];
+        }
+
+        foreach ($relations as $relation) {
+            // Just trigger the lazy loader once: __get will cache it into $relations
+            $this->{$relation};
+        }
+
+        return $this;
+    }
+
+    /**
+     * Begin a query with the given relations eager-loaded
+     * 
+     * Example:
+     *     User::with('posts', 'profile')->where('active', true)->get();
+     * @param string|array[] $relations
+     * @return Builder
+     */
+    public static function with(string|array ...$relations): Builder
+    {
+        // Allow both with('posts', 'profile') and with(['posts', 'profile])
+        if (count($relations) === 1 && is_array($relations)) {
+            $relations = $relations[0];
+        }
+
+        $builder = static::query();
+
+        return $builder->with($relations);
+    }
+
+    /**
+     *  Eager load relationships on a collection of models.
+     * 
+     * This is a simple implementation: it loops models and triggers 
+     * the relationship once on each. It gives you "eager semantics" (no
+     * extra queries after) even though it doesn't yet optimize N+1s.
+     * 
+     * @todo: implement n+1optimization
+     * @param Collection $models
+     * @param array $relations
+     * @return void
+     */
+    public static function eagerLoadCollection(Collection $models, array $relations): void
+    {
+        if ($models->isEmpty()) {
+            return;
+        }
+
+        $first = $models->first();
+
+        if (! $first instanceof static) {
+            return;
+        }
+
+        $items = $models->all();
+
+        foreach ($relations as $relationName) {
+            if (!is_string($relationName) || !method_exists($first, $relationName)) {
+                continue;
+            }
+
+            $relation = $first->getRelationObject($relationName);
+            if ($relation === null) {
+                continue;
+            }
+
+            // hasMany, HasOne, BelongsTo, MorphMany, etc.
+            if ($relation instanceof BaseRelation) {
+                $keys = $relation->addEagerConstraints($items);
+                $results = $relation->getEager($keys);
+                $relation->match($items, $results, $relationName);
+            }
+
+            // Fallback for other relation types (e.g. BelongsToMany): naive
+            else {
+                foreach ($items as $model) {
+                    if ($model instanceof static) {
+                        $model->{$relationName}; // triggers lazy load once
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Determine if a given relationship is already loaded.
+     * 
+     * @param string $relation
+     * @return bool
+     */
+    public function isRelationLoaded(string $relation): bool
+    {
+        return array_key_exists($relation, $this->relations);
+    }
+
+    /**
+     * Get a loaded relationship value.
+     * @param string $relation
+     * @return mixed|null
+     */
+    public function getRelation(string $relation): mixed
+    {
+        return $this->relations[$relation] ?? null;
+    }
+
+    public function setRelation(string $relation, mixed $value): static
+    {
+        $this->relations[$relation] = $value;
+        return $this;
+    }
+    /**
+     * Get all loaded relations.
+     * 
+     * @return array<string, mixed>
+     */
+    public function getRelations(): array
+    {
+        return $this->relations;
+    }
     /**
      * Apply global scopes to the query builder
      */
@@ -456,51 +620,72 @@ abstract class Model implements ArrayAccess
     /**
      * Define a one-to-many relationship
      */
-    protected function hasMany(string $related, string $foreignKey, string $localKey = 'id'): Collection
+    /**
+     * Internal flag to track if we're getting relation object for eager loading
+     */
+    protected static bool $gettingRelationObject = false;
+
+    /**
+     * Get the relation object without executing the query (for eager loading)
+     */
+    protected function getRelationObject(string $relationName): ?BaseRelation
     {
-        $localValue = $this->attributes[$localKey] ?? null;
-        if ($localValue === null) {
-            return new Collection();
+        if (!method_exists($this, $relationName)) {
+            return null;
         }
 
-        /** @var Model $related */
-        $result = $related::query()
-            ->where($foreignKey, '=', $localValue)
-            ->get();
+        static::$gettingRelationObject = true;
+        $relation = $this->{$relationName}();
+        static::$gettingRelationObject = false;
+
+        return $relation instanceof BaseRelation ? $relation : null;
+    }
+
+    protected function hasMany(string $related, string $foreignKey, string $localKey = 'id'): mixed
+    {
+        $relation = new HasMany($this, $related, $foreignKey, $localKey);
         
-        // Ensure we always return a Collection, never null
-        return $result instanceof Collection ? $result : new Collection();
+        // If we're getting the relation object for eager loading, return it directly
+        // Otherwise, return the results (for direct method calls)
+        if (static::$gettingRelationObject) {
+            return $relation;
+        }
+        
+        return $relation->getResults();
     }
 
     /**
      * Define a one-to-one relationship
+     * 
+     * We can reuse HasMany and just take the first result when lazy loading via __get()
      */
-    protected function hasOne(string $related, string $foreignKey, string $localKey = 'id'): ?Model
+    protected function hasOne(string $related, string $foreignKey, string $localKey = 'id'): mixed
     {
-        $localValue = $this->attributes[$localKey] ?? null;
-        if ($localValue === null) {
-            return null;
+        $relation = new HasOne($this, $related, $foreignKey, $localKey);
+        
+        // If we're getting the relation object for eager loading, return it directly
+        // Otherwise, return the results (for direct method calls)
+        if (static::$gettingRelationObject) {
+            return $relation;
         }
-
-        /** @var Model $related */
-        return $related::query()
-            ->where($foreignKey, '=', $localValue)
-            ->first();
+        
+        return $relation->getResults();
     }
 
     /**
      * Define an inverse one-to-one or many-to-one relationship
      */
-    protected function belongsTo(string $related, string $foreignKey, string $ownerKey = 'id'): ?Model
+    protected function belongsTo(string $related, string $foreignKey, string $ownerKey = 'id'): mixed
     {
-        $foreignValue = $this->attributes[$foreignKey] ?? null;
-        if ($foreignValue === null) {
-            return null;
+        $relation = new BelongsTo($this, $related, $foreignKey, $ownerKey);
+        
+        // If we're getting the relation object for eager loading, return it directly
+        // Otherwise, return the results (for direct method calls)
+        if (static::$gettingRelationObject) {
+            return $relation;
         }
-
-        /** @var Model $related */
-        return $related::query()
-            ->where($ownerKey, '=', $foreignValue)->first();
+        
+        return $relation->getResults();
     }
 
     /**
@@ -627,6 +812,55 @@ abstract class Model implements ArrayAccess
         return $array;
     }
 
+    /**
+     * Define a polymorphic one-to-many relationship
+     * 
+     * e.g. Post::morphMany(Comment::class, 'commentable')
+     *      => commentable_type, commentable_id
+     * @param string $related
+     * @param string $name
+     * @param string $locaKey
+     * @param string $localKey
+     * @return MorphMany
+     */
+    protected function morphMany(string $related, string $name, string $locaKey, string $localKey = 'id'): MorphMany
+    {
+        $typeColumn = $name . '_type';
+        $idColumn = $name . '_id';
+
+        return new MorphMany($this, $related, $typeColumn, $idColumn, $localKey);
+    }
+    protected function morphOne(string $related, string $name, string $localKey = 'id'): MorphOne
+    {
+        $typeColumn = $name . '_type';
+        $idColumn   = $name . '_id';
+
+        return new MorphOne($this, $related, $typeColumn, $idColumn, $localKey);
+    }
+
+    /**
+     * Define a polymorphic inverse relationship.
+     * 
+     * e.g. Comment::morphTo('commentable')
+     * @param string $name
+     * @return MorphTo
+     */
+    protected function morphTo(string $name): MorphTo
+    {
+        return new MorphTo($this, $name);
+    }
+
+    /**
+     * Get the class name used to store this model in polymorphic relationship.
+     * 
+     * You can override this in child models to use a shorter alias
+     * (similar to Laravel's morphMap)
+     * @return string
+     */
+    public function getMorphClass(): string
+    {
+        return static::class;
+    }
     protected function keyToStudly(string $key): string
     {
         // "full_name" -> "FullName"
@@ -655,45 +889,53 @@ abstract class Model implements ArrayAccess
 
     public function __get(string $key): mixed
     {
-        // 1) normal attribute or accessor
+        // 1) Attribute / accessor
         if (array_key_exists($key, $this->attributes) || $this->hasGetMutator($key)) {
             return $this->getAttribute($key);
         }
 
-        // 2) Check if relationship is already loaded
-        if (isset($this->relations[$key])) {
+        // 2) Loaded Relation
+        if (array_key_exists($key, $this->relations)) {
             return $this->relations[$key];
         }
 
-        // 3) Relationship-style method:
-        //      If there's a method with this name, call it and cache result.
+        // 3) Relationship-style method: User::posts(),User::profile(), etc
         if (method_exists($this, $key)) {
             try {
-                $value = $this->{$key}(); // e.g. $this->posts()
-                
-                // Handle BelongsToMany relationship objects - call get() to get Collection
-                if ($value instanceof \BareMetalPHP\Database\Relations\BelongsToMany) {
-                    $value = $value->get();
+                // Set flag to get Relation object for __get (property access)
+                static::$gettingRelationObject = true;
+                $relation = $this->{$key}();
+                static::$gettingRelationObject = false;
+
+                if ($relation instanceof \BareMetalPHP\Database\Relations\BelongsToMany) {
+                    $value = $relation->get();
                 }
-                
-                // Ensure relationships always return a Collection if they're supposed to return collections
-                // If null is returned, return empty collection for safety
-                if ($value === null) {
-                    $value = new Collection();
+
+                // Any Relation subclasses: HasMany, HasOne, BelongsTo, etc.
+                // Note: HasOne doesn't extend Relation, so we check for it separately
+                elseif ($relation instanceof BaseRelation 
+                    || $relation instanceof \BareMetalPHP\Database\Relations\HasOne
+                    || $relation instanceof \BareMetalPHP\Database\Relations\HasMany
+                    || $relation instanceof \BareMetalPHP\Database\Relations\BelongsTo) {
+                    $value = $relation->getResults();
+                } else {
+                    // fallback -- allow methods to return Model/Collection directly
+                    $value = $relation;
                 }
-                $this->relations[$key] = $value; // cache relationship separately from attributes
-                return $value;
-            } catch (\Exception $e) {
-                // If relationship fails, return empty collection instead of null
-                $value = new Collection();
+
                 $this->relations[$key] = $value;
                 return $value;
+
+            } catch (\Throwable $e) {
+                // In case of failure, cache null so we don't keep retrying
+                $this->relations[$key] = null;
+                return null;
             }
         }
 
-        // 4) fallback
         return null;
     }
+
 
     public function __set(string $key, mixed $value): void
     {
