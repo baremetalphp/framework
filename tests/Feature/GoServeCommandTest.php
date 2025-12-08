@@ -54,7 +54,7 @@ class GoServeCommandTest extends TestCase
         $output = ob_get_clean();
 
         $this->assertStringContainsString('Go app server (dry run)', $output);
-        $this->assertStringContainsString('go run cmd/server/main.go', $output);
+        $this->assertStringContainsString('go run ./cmd/server', $output);
     }
 
     public function testShowsDisabledMessageWhenNotEnabled(): void
@@ -143,6 +143,6 @@ class GoServeCommandTest extends TestCase
 
         $output = $this->runMiniCommand('go:serve', ['--dry-run']);
 
-        $this->assertStringContainsString('Go app server (dry run): would execute `go run cmd/server/main.go`', $output);
+        $this->assertStringContainsString('Go app server (dry run): would execute `go run ./cmd/server`', $output);
     }
 }
