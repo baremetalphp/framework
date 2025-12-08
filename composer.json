@@ -2,6 +2,7 @@
     "name": "baremetalphp/framework",
     "description": "A lightweight, educational PHP framework with service container, routing, ORM, and more",
     "type": "library",
+    "version": "0.2.0",
     "license": "MIT",
     "keywords": ["framework", "php", "mvc", "orm", "routing"],
     "autoload": {
