@@ -94,24 +94,7 @@ class InstallFrontendCommand
 
     protected function createReactFiles(string $jsDir): void
     {
-        // Create main app file
-        $appJsx = <<<'JSX'
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App';
-
-const container = document.getElementById('app');
-if (container) {
-    const component = container.dataset.component || 'App';
-    const props = container.dataset.props ? JSON.parse(container.dataset.props) : {};
-    
-    const root = createRoot(container);
-    root.render(<App {...props} />);
-}
-JSX;
-        file_put_contents($jsDir . '/app.jsx', $appJsx);
-
-        // Create App component
+        // Create App component first (to avoid case-sensitivity issues on macOS)
         $appComponent = <<<'JSX'
 import React from 'react';
 
@@ -127,6 +110,23 @@ function App(props = {}) {
 export default App;
 JSX;
         file_put_contents($jsDir . '/App.jsx', $appComponent);
+
+        // Create main app file (entry point) - create last so it's the one that exists on case-insensitive filesystems
+        $appJsx = <<<'JSX'
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+
+const container = document.getElementById('app');
+if (container) {
+    const component = container.dataset.component || 'App';
+    const props = container.dataset.props ? JSON.parse(container.dataset.props) : {};
+    
+    const root = createRoot(container);
+    root.render(<App {...props} />);
+}
+JSX;
+        file_put_contents($jsDir . '/app.jsx', $appJsx);
     }
 
     protected function createVueFiles(string $jsDir): void
@@ -191,7 +191,7 @@ import { defineConfig } from 'vite';
 import {$pluginVar} from '{$plugin}';
 
 export default defineConfig({
-    plugins: [{$pluginVar}({$pluginCall})],
+    plugins: [{$pluginVar}()],
     build: {
         outDir: 'public/build',
         manifest: true,

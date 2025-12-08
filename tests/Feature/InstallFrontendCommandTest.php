@@ -76,7 +76,8 @@ class InstallFrontendCommandTest extends TestCase
                 unlink(base_path('resources/js/App.jsx'));
             }
             if (is_dir(base_path('resources/js'))) {
-                rmdir(base_path('resources/js'));
+                // Remove directory recursively in case there are other files
+                $this->removeDirectory(base_path('resources/js'));
             }
         }
 
@@ -94,6 +95,12 @@ class InstallFrontendCommandTest extends TestCase
 
     public function testCanInstallVueFrontend(): void
     {
+        // Clean up any existing vite config from previous tests
+        $viteConfigPath = base_path('vite.config.js');
+        if (file_exists($viteConfigPath)) {
+            unlink($viteConfigPath);
+        }
+        
         $command = new InstallFrontendCommand();
         
         ob_start();
@@ -130,7 +137,8 @@ class InstallFrontendCommandTest extends TestCase
                 unlink(base_path('resources/js/App.vue'));
             }
             if (is_dir(base_path('resources/js'))) {
-                rmdir(base_path('resources/js'));
+                // Remove directory recursively in case there are other files
+                $this->removeDirectory(base_path('resources/js'));
             }
         }
 
