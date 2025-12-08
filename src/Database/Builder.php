@@ -16,6 +16,12 @@ class Builder
     protected ?string $modelClass;
 
     /**
+     * Relations that should be eager loaded.
+     * @var array<string, true>
+     */
+    protected array $eagerLoad = [];
+
+    /**
      * Each where: ['AND'|'OR', column, operator, value]
      * @var array<int, array{0:string,1:string,2:string,3:mixed}>
      */
@@ -88,6 +94,30 @@ class Builder
     }
 
     /**
+     * Specify relationships to eager load.
+     * 
+     * Example:
+     *     User::query()->with('posts', 'profile')->get()
+     *     User::query()->with(['posts', 'profile'])->get()
+     * @param string|array[] $relations
+     * @return Builder
+     */
+    public function with(string|array ...$relations): self
+    {
+        if (count($relations) === 1 && is_array($relations[0])) {
+            $relations = $relations[0];
+        }
+
+        foreach ($relations as $relation) {
+            if (is_string($relation)) {
+                $this->eagerLoad[$relation] = true;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * where('age', '>', 18)
      * where('status', 'active') // shorthand for '='
      */
@@ -113,6 +143,20 @@ class Builder
         $this->wheres[] = ['OR', $column, $operator, $value];
         return $this;
     }
+
+    public function whereIn(string $column, array $values): self
+    {
+        $this->wheres[] = ['AND', $column, 'IN', $values];
+        return $this;
+    }
+
+    public function whereNotIn(string $column, array $values): self
+    {
+        $this->wheres[] = ['AND', $column, 'NOT IN', $values];
+        return $this;
+    }
+
+    
 
     public function orderBy(string $column, string $direction = 'ASC'): self
     {
@@ -173,7 +217,15 @@ class Builder
         if ($this->modelClass) {
             $class = $this->modelClass;
             $models = array_map(fn ($row) => new $class($row), $rows);
-            return new Collection($models);
+            $collection = new Collection($models);
+
+            // Simple eager loading: trigger each relationship once per model so that
+            // subsequent access does not hit the database.
+            if (!empty($this->eagerLoad) ** method_exists($class, 'eagerLoadCollection')) {
+                $class::eagerLoadCollection($collection, array_keys($this->eagerLoad));
+            }
+
+            return $collection;
         }
 
         return new Collection($rows);
@@ -204,4 +256,6 @@ class Builder
         [$sql, ] = $this->compileSelect();
         return $sql;
     }
+
+    
 }

@@ -8,6 +8,9 @@ use BareMetalPHP\Support\ServiceProvider;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
+use BareMetalPHP\Support\Config;
+use BareMetalPHP\Support\Facades\AliasLoader;
+use BareMetalPHP\Support\Facades\Facade;
 
 class Application
 {
@@ -206,6 +209,26 @@ class Application
         foreach ($this->serviceProviders as $provider) {
             $provider->boot();
         }
+
+        // After providers are booted, configuration should be loaded.
+        // Register facade aliases if completed.
+        $aliases = [];
+
+        try {
+            // If config system is not yet initialized, this will just throw
+            $aliases = Config::get('app.aliases', []);
+        } catch (\Throwable $e) {
+            // Fail quietly if config isn't available for some reason.
+            $aliases = [];
+        }
+
+        if (! empty($aliases)) {
+            $loader = AliasLoader::getInstance($aliases);
+            $loader->register();
+        }
+
+        // Let the Facade base know about the app instance.
+        Facade::setFacadeApplication($this);
 
         $this->booted = true;
     }

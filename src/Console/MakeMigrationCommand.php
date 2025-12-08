@@ -20,15 +20,19 @@ class MakeMigrationCommand
             mkdir($migrationsDir, 0777, true);
         }
 
+        // Check if a migration with the same name already exists
+        foreach (glob($migrationsDir . '/*_*.php') as $file) {
+            $existingName = preg_replace('/^\d+_/', '', basename($file, '.php'));
+            if ($existingName === $name) {
+                echo "Migration already exists: {$name}\n";
+                return;
+            }
+        }
+
         // timestamped filename like 20241204194500_create_users_table.php
         $timestamp = date('YmdHis');
         $fileName = $timestamp . '_'.$name.'.php';
         $path = $migrationsDir. '/' .$fileName;
-
-        if (file_exists($path)) {
-            echo "Migration already exists: {$path}\n";
-            return;
-        }
 
         $template = <<<PHP
 <?php
@@ -40,6 +44,7 @@ return new class extends Migration
 {
     public function up(Connection \$connection): void
     {
+        // Migration: {$name}
         // Example 1: Create a table using the schema builder
         // \$this->createTable(\$connection, 'table_name', function (\$table) {
         //     \$table->id();                                    // Auto-incrementing primary key

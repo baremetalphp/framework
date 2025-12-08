@@ -7,7 +7,7 @@ namespace Tests;
 use BareMetalPHP\Application;
 use BareMetalPHP\Database\Connection;
 use BareMetalPHP\Database\Model;
-use PHPUnit\BareMetalPHP\TestCase as BaseTestCase;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 use PDO;
 
 abstract class TestCase extends BaseTestCase
