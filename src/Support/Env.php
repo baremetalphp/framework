@@ -25,8 +25,15 @@ class Env
         $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
         foreach ($lines as $line) {
-            // Skip comments
+            // Trim the line first
             $line = trim($line);
+            
+            // Skip empty lines (after trimming)
+            if (empty($line)) {
+                continue;
+            }
+            
+            // Skip comments (lines starting with #)
             if (str_starts_with($line, '#')) {
                 continue;
             }

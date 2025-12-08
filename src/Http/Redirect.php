@@ -16,7 +16,7 @@ class Redirect extends Response
     public function __construct(string $url, int $status = 302, array $headers = [])
     {
         // Ensure Location header is always set
-        $headers['Location'] = $uri;
+        $headers['Location'] = $url;
 
         // Empty body for redirects
         parent::__construct('', $status, $headers);

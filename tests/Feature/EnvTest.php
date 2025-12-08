@@ -31,8 +31,11 @@ class EnvTest extends TestCase
         putenv('VERSION');
         putenv('ITEMS');
         putenv('EXISTS');
+        putenv('This');
         unset($_ENV['APP_NAME'], $_ENV['APP_DEBUG'], $_ENV['BOOL_TRUE'], $_ENV['BOOL_FALSE'], 
-              $_ENV['PORT'], $_ENV['VERSION'], $_ENV['ITEMS'], $_ENV['EXISTS']);
+              $_ENV['PORT'], $_ENV['VERSION'], $_ENV['ITEMS'], $_ENV['EXISTS'], $_ENV['This']);
+        unset($_SERVER['APP_NAME'], $_SERVER['APP_DEBUG'], $_SERVER['BOOL_TRUE'], $_SERVER['BOOL_FALSE'], 
+              $_SERVER['PORT'], $_SERVER['VERSION'], $_SERVER['ITEMS'], $_SERVER['EXISTS'], $_SERVER['This']);
     }
 
     protected function tearDown(): void
@@ -109,7 +112,8 @@ class EnvTest extends TestCase
     {
         file_put_contents($this->envFile, "# This is a comment\nAPP_NAME=TestApp");
         
-        Env::load($this->envFile);
+        // Force reload to ensure clean state
+        Env::load($this->envFile, true);
         
         $this->assertEquals('TestApp', Env::get('APP_NAME'));
         $this->assertFalse(Env::has('This'));

@@ -42,6 +42,11 @@ class HttpKernelTest extends TestCase
 
     public function testKernelReturns404ForNonExistentRoute(): void
     {
+        // Ensure debug mode is off for this test
+        putenv('APP_DEBUG=false');
+        $_ENV['APP_DEBUG'] = 'false';
+        $_SERVER['APP_DEBUG'] = 'false';
+        
         $router = new Router($this->app);
         $kernel = new TestKernel($this->app, $router);
         $request = new Request([], [], ['REQUEST_METHOD' => 'GET', 'REQUEST_URI' => '/nonexistent'], [], []);
@@ -54,6 +59,8 @@ class HttpKernelTest extends TestCase
     public function testKernelHandlesExceptionsInDebugMode(): void
     {
         putenv('APP_DEBUG=true');
+        $_ENV['APP_DEBUG'] = 'true';
+        $_SERVER['APP_DEBUG'] = 'true';
         
         $router = new Router($this->app);
         $router->get('/error', fn() => throw new \RuntimeException('Test error'));
@@ -68,11 +75,15 @@ class HttpKernelTest extends TestCase
         $this->assertStringContainsString('RuntimeException', $response->getBody());
         
         putenv('APP_DEBUG=false');
+        $_ENV['APP_DEBUG'] = 'false';
+        $_SERVER['APP_DEBUG'] = 'false';
     }
 
     public function testKernelHandlesExceptionsInProductionMode(): void
     {
         putenv('APP_DEBUG=false');
+        $_ENV['APP_DEBUG'] = 'false';
+        $_SERVER['APP_DEBUG'] = 'false';
         
         $router = new Router($this->app);
         $router->get('/error', fn() => throw new \RuntimeException('Test error'));
