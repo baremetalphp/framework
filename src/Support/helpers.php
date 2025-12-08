@@ -184,13 +184,32 @@ if (!function_exists('route')) {
         }
         
         $router = $app->make(\BareMetalPHP\Routing\Router::class);
-        $path = $router->route($name, $parameters);
-        
-        // Return relative path - use url() helper if you need full URL
-        return $path;
+
+        return $router->route($name, $parameters);
     }
 }
 
+if (!function_exists('redirect')) {
+    /**
+     * Create a Redirect.
+     * 
+     * Usage:
+     *     return redirect('/home');
+     *     return redirect()->route('dashboard');
+     *     return redirect()->back();
+     */
+
+    function redirect(?string $to = null, int $status = 302, array $headers = []): \BareMetalPHP\Http\Redirect
+    {
+        // If no destination given, return a "blank" redirect response
+        // so the caller can choose ->route(), ->back(), etc.
+        if ($to === null) {
+            return new \BareMetalPHP\Http\Redirect('/');
+        }
+
+        return \BareMetalPHP\Http\Redirect::to($to, $status, $headers);
+    }
+}
 if (!function_exists('view')) {
     /**
      * Create a view response
