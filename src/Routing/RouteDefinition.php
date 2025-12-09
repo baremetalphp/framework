@@ -30,4 +30,12 @@ class RouteDefinition
         $this->router->setRouteMiddleware($this->method, $this->uri, $this->middleware);
         return $this;
     }
+
+    /**
+     * Get the URI for this route
+     */
+    public function getUri(): string
+    {
+        return $this->uri;
+    }
 }

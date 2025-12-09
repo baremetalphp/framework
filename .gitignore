@@ -22,3 +22,15 @@ Thumbs.db
 .env.*
 !.env.example
 
+# Xdebug
+._icons/*
+._js/*
+._css/*
+.phpunit.cache/
+
+# PHPUnit Coverage Reports
+_coverage/
+*.html
+!resources/**/*.html
+
+tree

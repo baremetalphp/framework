@@ -5,8 +5,15 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use BareMetalPHP\Auth\Auth;
+use BareMetalPHP\Database\Model;
 use BareMetalPHP\Support\Session;
 use Tests\TestCase;
+
+// Create a test User model for Auth tests
+class User extends Model
+{
+    protected static string $table = 'users';
+}
 
 class AuthTest extends TestCase
 {
@@ -19,6 +26,12 @@ class AuthTest extends TestCase
         // Start session for testing
         Session::start();
         Session::flush();
+        
+        // Alias the test User class to App\Models\User for Auth to use
+        // This needs to be done before any Auth methods are called
+        if (!class_exists('App\Models\User')) {
+            class_alias(User::class, 'App\Models\User');
+        }
     }
 
     protected function tearDown(): void

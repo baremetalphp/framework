@@ -56,7 +56,7 @@ class Application
     /**
      * Set the globally accessible application instance
      */
-    public static function setInstance(Application $app): void
+    public static function setInstance(?Application $app): void
     {
         static::$instance = $app;
     }

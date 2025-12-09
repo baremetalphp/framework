@@ -37,10 +37,10 @@ abstract class Facade
 
     /**
      * Set the application instance to be used by facades.
-     * @param Application $app
+     * @param Application|null $app
      * @return void
      */
-    public static function setFacadeApplication(Application $app)
+    public static function setFacadeApplication(?Application $app): void
     {
         static::$app = $app;
     }
