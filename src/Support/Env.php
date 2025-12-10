@@ -4,155 +4,113 @@ declare(strict_types=1);
 
 namespace BareMetalPHP\Support;
 
-class Env
+final class Env
 {
-    protected static bool $loaded = false;
-
     /**
-     * Load environment variables from .env file
+     * Load environment variables from a file.
+     * 
+     * @param string $path Path to .env file
+     * @param bool $override If true, will override existing values. If false, will skip if already set.
      */
-    public static function load(string $filePath, bool $force = false): void
+    public static function load(string $path, bool $override = false): void
     {
-        if (!file_exists($filePath)) {
+        if (! is_file($path)) {
             return;
         }
 
-        // Allow multiple loads if force is true (for .env.local overrides)
-        if (static::$loaded && !$force) {
-            return;
-        }
-
-        $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
         foreach ($lines as $line) {
-            // Trim the line first
             $line = trim($line);
-            
-            // Skip empty lines (after trimming)
-            if (empty($line)) {
-                continue;
-            }
-            
-            // Skip comments (lines starting with #)
-            if (str_starts_with($line, '#')) {
+
+            // Comments
+            if ($line === '' || str_starts_with($line, '#')) {
                 continue;
             }
 
-            // Parse KEY=VALUE format
-            if (str_contains($line, '=')) {
-                [$key, $value] = explode('=', $line, 2);
-                
-                $key = trim($key);
-                $value = trim($value);
-                
-                // Skip empty keys
-                if (empty($key)) {
-                    continue;
-                }
-                
-                // Remove quotes if present
-                if ((str_starts_with($value, '"') && str_ends_with($value, '"')) ||
-                    (str_starts_with($value, "'") && str_ends_with($value, "'"))) {
-                    $value = substr($value, 1, -1);
-                }
-                
-                // Don't override existing environment variables unless force is true
-                if ($force || !static::has($key)) {
-                    putenv("{$key}={$value}");
-                    $_ENV[$key] = $value;
-                    $_SERVER[$key] = $value;
-                }
-            }
-        }
+            // KEY=VALUE
+            [$name, $value] = array_pad(explode('=', $line, 2), 2, null);
 
-        if (!$force) {
-            static::$loaded = true;
+            $name = trim($name);
+            $value = trim((string) $value);
+
+            // strip quotes
+            $value = trim($value, "\"'");
+
+            // Only set if override is true, or if the variable doesn't already exist
+            if ($override || !array_key_exists($name, $_ENV)) {
+                $_ENV[$name] = $value;
+                putenv("{$name}={$value}");
+            }
         }
     }
 
-    /**
-     * Get environment variable with type casting
-     */
     public static function get(string $key, mixed $default = null): mixed
     {
-        // Check $_ENV first (most reliable)
-        if (isset($_ENV[$key])) {
-            return static::castValue($_ENV[$key]);
+        $value = null;
+        
+        if (array_key_exists($key, $_ENV)) {
+            $value = $_ENV[$key];
+        } else {
+            $envValue = getenv($key);
+            if ($envValue !== false) {
+                $value = $envValue;
+            }
         }
-        
-        // Check $_SERVER (also set by load())
-        if (isset($_SERVER[$key])) {
-            return static::castValue($_SERVER[$key]);
-        }
-        
-        // Fall back to getenv()
-        $value = getenv($key);
-        
-        if ($value === false) {
+
+        if ($value === null) {
             return $default;
         }
-        
-        // Type casting based on value
-        return static::castValue($value);
+
+        // Auto-cast string values to common types
+        // If value is already a non-string type, return as-is
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        return self::castValue($value);
     }
 
     /**
-     * Cast string value to appropriate type
+     * Cast string value to appropriate type (bool, int, float, array)
      */
     protected static function castValue(string $value): mixed
     {
-        // Boolean true
-        if (in_array(strtolower($value), ['true', '1', 'yes', 'on'], true)) {
+        // Handle boolean values
+        if (strtolower($value) === 'true') {
             return true;
         }
-        
-        // Boolean false
-        if (in_array(strtolower($value), ['false', '0', 'no', 'off', ''], true)) {
+        if (strtolower($value) === 'false') {
             return false;
         }
         
-        // Null
-        if (strtolower($value) === 'null') {
-            return null;
-        }
-        
-        // Try to cast to integer if numeric and no decimal point
-        if (is_numeric($value) && !str_contains($value, '.')) {
+        // Handle integers
+        if (ctype_digit($value) || (str_starts_with($value, '-') && ctype_digit(substr($value, 1)))) {
             return (int) $value;
         }
         
-        // Try to cast to float if numeric with decimal point
+        // Handle floats
         if (is_numeric($value) && str_contains($value, '.')) {
             return (float) $value;
         }
         
-        // Array syntax: [item1,item2] or ["item1","item2"]
+        // Handle arrays (comma-separated or JSON-like)
         if (str_starts_with($value, '[') && str_ends_with($value, ']')) {
+            // Try to parse as array: [item1,item2,item3]
             $content = trim($value, '[]');
-            if (empty($content)) {
-                return [];
+            if ($content !== '') {
+                $items = array_map('trim', explode(',', $content));
+                return $items;
             }
-            
-            $items = array_map('trim', explode(',', $content));
-            return array_map(function ($item) {
-                // Remove quotes if present
-                if ((str_starts_with($item, '"') && str_ends_with($item, '"')) ||
-                    (str_starts_with($item, "'") && str_ends_with($item, "'"))) {
-                    return substr($item, 1, -1);
-                }
-                return static::castValue($item);
-            }, $items);
+            return [];
         }
         
+        // Return as string by default
         return $value;
     }
 
-    /**
-     * Check if environment variable exists
-     */
     public static function has(string $key): bool
     {
-        return isset($_ENV[$key]) || isset($_SERVER[$key]) || getenv($key) !== false;
+        return array_key_exists($key, $_ENV) || getenv($key) !== false;
     }
 }
-

@@ -1,0 +1,1301 @@
+PHPUnit 12.5.2 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.15
+Configuration: /Users/elliotanderson/php/baremetalphp-src/phpunit.xml
+
+..........E.............F......................................  63 / 510 ( 12%)
+.....................................................SSS.....S. 126 / 510 ( 24%)
+............................................................... 189 / 510 ( 37%)
+...F...F.........EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEF... 252 / 510 ( 49%)
+..................Migration created: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_migration_test_6939f77556301/database/migrations/20251210224301_test_migration.php
+RMigration created: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_migration_test_6939f7755667b/database/migrations/20251210224301_test_migration.php
+R.Controller created: app/Http/Controllers/TestController.php
+R......................................... 315 / 510 ( 61%)
+..........N....EE...........FF................................. 378 / 510 ( 74%)
+............................................................... 441 / 510 ( 86%)
+WebSocket broadcast: failed to encode payload
+R................EEEEEEEEEEInstalling Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_6939f77564969
+Created go.mod with module name: baremetal_test_6939f77564969
+EInstalling Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_6939f77564b9b
+Created go.mod with module name: baremetal_test_6939f77564b9b
+EInstalling Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_6939f77564d9e
+Created go.mod with module name: baremetal_test_6939f77564d9e
+EInstalling Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_6939f77565072
+Created go.mod with module name: baremetal_test_6939f77565072
+E..F.F.........NNNNEEEENo migration files found.
+RNNNN..... 504 / 510 ( 98%)
+......                                                          510 / 510 (100%)
+
+Time: 00:01.678, Memory: 22.00 MB
+
+There were 63 errors:
+
+1) Tests\Unit\ConfigTest::testAppServerConfigDefaults
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ConfigTest.php:109
+
+2) Tests\Unit\Frontend\AssetManagerTest::testIsDevReturnsFalseInProduction
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:45
+
+3) Tests\Unit\Frontend\AssetManagerTest::testAssetReturnsProductionPathWhenManifestMissing
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:52
+
+4) Tests\Unit\Frontend\AssetManagerTest::testCssReturnsEmptyArrayInDevelopment
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:39
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:23
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:99
+
+5) Tests\Unit\Frontend\AssetManagerTest::testCssReturnsEmptyWhenManifestMissing
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:108
+
+6) Tests\Unit\Frontend\AssetManagerTest::testViteClientReturnsEmptyInProduction
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:152
+
+7) Tests\Unit\Frontend\AssetManagerTest::testViteClientReturnsScriptInDevelopment
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:39
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:23
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:166
+
+8) Tests\Unit\Frontend\AssetManagerTest::testViteClientIncludesReactPreamble
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:39
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:23
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:189
+
+9) Tests\Unit\Frontend\AssetManagerTest::testScriptGeneratesScriptTag
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:206
+
+10) Tests\Unit\Frontend\AssetManagerTest::testScriptWithCustomAttributes
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:216
+
+11) Tests\Unit\Frontend\AssetManagerTest::testScriptWithStringAttributes
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:225
+
+12) Tests\Unit\Frontend\AssetManagerTest::testStylesReturnsEmptyInDevelopment
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:39
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:23
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:236
+
+13) Tests\Unit\Frontend\AssetManagerTest::testGetManifestReturnsEmptyArrayWhenFileMissing
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:287
+
+14) Tests\Unit\Frontend\AssetManagerTest::testBuildAttributesWithBooleanTrue
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:332
+
+15) Tests\Unit\Frontend\AssetManagerTest::testBuildAttributesWithStringValue
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:346
+
+16) Tests\Unit\Frontend\AssetManagerTest::testBuildAttributesIgnoresFalseAndNull
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:359
+
+17) Tests\Unit\Frontend\AssetManagerTest::testAssetNormalizesPath
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:380
+
+18) Tests\Unit\Frontend\AssetManagerTest::testCanCreateAssetManager
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:35
+
+19) Tests\Unit\Frontend\AssetManagerTest::testAssetWithManifest
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:80
+
+20) Tests\Unit\Frontend\AssetManagerTest::testCssReturnsFilesFromManifest
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:135
+
+21) Tests\Unit\Frontend\AssetManagerTest::testStylesReturnsLinkTags
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:269
+
+22) Tests\Unit\Frontend\AssetManagerTest::testGetManifestCachesResult
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/AssetManagerTest.php:315
+
+23) Tests\Unit\Frontend\SPAHelperTest::testRenderReturnsResponse
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:37
+
+24) Tests\Unit\Frontend\SPAHelperTest::testRenderIncludesComponentInHtml
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:49
+
+25) Tests\Unit\Frontend\SPAHelperTest::testRenderIncludesPropsInHtml
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:62
+
+26) Tests\Unit\Frontend\SPAHelperTest::testRenderUsesDefaultLayoutWhenLayoutFileMissing
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:76
+
+27) Tests\Unit\Frontend\SPAHelperTest::testJsonReturnsJsonResponse
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:120
+
+28) Tests\Unit\Frontend\SPAHelperTest::testJsonWithCustomStatus
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:136
+
+29) Tests\Unit\Frontend\SPAHelperTest::testCsrfTokenReturnsEmptyString
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:146
+
+30) Tests\Unit\Frontend\SPAHelperTest::testBuildDefaultLayoutIncludesAssetManagerMethods
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:157
+
+31) Tests\Unit\Frontend\SPAHelperTest::testRenderEscapesPropsInJson
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:177
+
+32) Tests\Unit\Frontend\SPAHelperTest::testCanCreateSPAHelper
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:29
+
+33) Tests\Unit\Frontend\SPAHelperTest::testRenderWithCustomLayout
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/AssetManager.php:25
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:101
+
+34) Tests\Unit\Frontend\ViteDevMiddlewareTest::testHandlePassesThroughNonViteAssets
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/Middleware/ViteDevMiddleware.php:19
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/ViteDevMiddlewareTest.php:26
+
+35) Tests\Unit\Frontend\ViteDevMiddlewareTest::testIsViteAssetDetectsVitePaths
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/Middleware/ViteDevMiddleware.php:19
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/ViteDevMiddlewareTest.php:47
+
+36) Tests\Unit\Frontend\ViteDevMiddlewareTest::testExtractContentTypeFromHeaders
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/Middleware/ViteDevMiddleware.php:19
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/ViteDevMiddlewareTest.php:70
+
+37) Tests\Unit\Frontend\ViteDevMiddlewareTest::testExtractContentTypeReturnsDefaultWhenMissing
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/Middleware/ViteDevMiddleware.php:19
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/ViteDevMiddlewareTest.php:84
+
+38) Tests\Unit\Frontend\ViteDevMiddlewareTest::testExtractContentTypeHandlesCaseInsensitive
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/Middleware/ViteDevMiddleware.php:19
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/ViteDevMiddlewareTest.php:98
+
+39) Tests\Unit\Frontend\ViteDevMiddlewareTest::testProxyToViteReturns404ForNon200Response
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/Middleware/ViteDevMiddleware.php:19
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/ViteDevMiddlewareTest.php:114
+
+40) Tests\Unit\Frontend\ViteDevMiddlewareTest::testHandleProxiesViteAssets
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/Middleware/ViteDevMiddleware.php:19
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/ViteDevMiddlewareTest.php:131
+
+41) Tests\Unit\Frontend\ViteDevMiddlewareTest::testCanCreateViteDevMiddleware
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Frontend/Middleware/ViteDevMiddleware.php:19
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/ViteDevMiddlewareTest.php:19
+
+42) Tests\Unit\HelperFunctionsTest::testConfigFunction
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/HelperFunctionsTest.php:48
+
+43) Tests\Unit\HelperFunctionsTest::testConfigFunctionWithDefault
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/HelperFunctionsTest.php:55
+
+44) Tests\Unit\Routing\RouterAdvancedTest::testRouteWithMiddleware
+Error: Call to undefined method BareMetalPHP\Http\Response::setHeader()
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Routing/RouterAdvancedTest.php:51
+/Users/elliotanderson/php/baremetalphp-src/src/Routing/Router.php:426
+/Users/elliotanderson/php/baremetalphp-src/src/Routing/Router.php:432
+/Users/elliotanderson/php/baremetalphp-src/src/Routing/Router.php:185
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Routing/RouterAdvancedTest.php:62
+
+45) Tests\Unit\Routing\RouterAdvancedTest::testRouteWithMultipleMiddleware
+Error: Call to undefined method BareMetalPHP\Http\Response::setHeader()
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Routing/RouterAdvancedTest.php:83
+/Users/elliotanderson/php/baremetalphp-src/src/Routing/Router.php:426
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Routing/RouterAdvancedTest.php:73
+/Users/elliotanderson/php/baremetalphp-src/src/Routing/Router.php:426
+/Users/elliotanderson/php/baremetalphp-src/src/Routing/Router.php:432
+/Users/elliotanderson/php/baremetalphp-src/src/Routing/Router.php:185
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Routing/RouterAdvancedTest.php:95
+
+46) Tests\Feature\EnvTest::testCanLoadEnvFile
+ReflectionException: Property BareMetalPHP\Support\Env::$loaded does not exist
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/EnvTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+47) Tests\Feature\EnvTest::testCanCastBooleanValues
+ReflectionException: Property BareMetalPHP\Support\Env::$loaded does not exist
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/EnvTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+48) Tests\Feature\EnvTest::testCanCastIntegerValues
+ReflectionException: Property BareMetalPHP\Support\Env::$loaded does not exist
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/EnvTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+49) Tests\Feature\EnvTest::testCanCastFloatValues
+ReflectionException: Property BareMetalPHP\Support\Env::$loaded does not exist
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/EnvTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+50) Tests\Feature\EnvTest::testCanCastArrayValues
+ReflectionException: Property BareMetalPHP\Support\Env::$loaded does not exist
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/EnvTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+51) Tests\Feature\EnvTest::testCanHandleQuotedValues
+ReflectionException: Property BareMetalPHP\Support\Env::$loaded does not exist
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/EnvTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+52) Tests\Feature\EnvTest::testCanSkipComments
+ReflectionException: Property BareMetalPHP\Support\Env::$loaded does not exist
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/EnvTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+53) Tests\Feature\EnvTest::testCanCheckIfEnvExists
+ReflectionException: Property BareMetalPHP\Support\Env::$loaded does not exist
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/EnvTest.php:21
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+54) Tests\Feature\InstallGoAppServerCommandTest::testAppServerConfigDefaults
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:218
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+55) Tests\Feature\InstallGoAppServerCommandTest::testCanInstallGoServerFiles
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/InstallGoAppServerCommand.php:74
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/InstallGoAppServerCommand.php:22
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:78
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+56) Tests\Feature\InstallGoAppServerCommandTest::testGoFilesContainCorrectContent
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/InstallGoAppServerCommand.php:74
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/InstallGoAppServerCommand.php:22
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:145
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+57) Tests\Feature\InstallGoAppServerCommandTest::testPhpFilesContainCorrectContent
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/InstallGoAppServerCommand.php:74
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/InstallGoAppServerCommand.php:22
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:236
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+58) Tests\Feature\InstallGoAppServerCommandTest::testGoConfigFileReflectsAppServerConfig
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/InstallGoAppServerCommand.php:74
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/InstallGoAppServerCommand.php:22
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:291
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+59) Tests\Feature\InstallGoAppServerCommandTest::testGoModUsesCorrectModuleName
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/InstallGoAppServerCommand.php:74
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/InstallGoAppServerCommand.php:22
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:320
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+60) Tests\Feature\GoServeCommandTest::testShowsDisabledMessageWhenNotEnabled
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/GoServeCommand.php:9
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/GoServeCommandTest.php:72
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+61) Tests\Feature\GoServeCommandTest::testGoServeShowsDisabledMessageWhenNotEnabled
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/GoServeCommand.php:9
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Application.php:83
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/GoServeCommandTest.php:109
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/GoServeCommandTest.php:122
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+62) Tests\Feature\GoServeCommandTest::testGoServeDryRunPrintsCommand
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/GoServeCommand.php:9
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Application.php:83
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/GoServeCommandTest.php:109
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/GoServeCommandTest.php:144
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+63) Tests\Feature\GoServeCommandTest::testDryRunShowsCommand
+RuntimeException: Cannot resolve parameter items
+
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:180
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:142
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:141
+/Users/elliotanderson/php/baremetalphp-src/src/Application.php:124
+/Users/elliotanderson/php/baremetalphp-src/src/Support/helpers.php:82
+/Users/elliotanderson/php/baremetalphp-src/src/Console/Commands/GoServeCommand.php:9
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/GoServeCommandTest.php:53
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+--
+
+There were 8 failures:
+
+1) Tests\Unit\Database\BelongsToManyTest::testSync
+Failed asserting that an array contains '2'.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BelongsToManyTest.php:296
+
+2) Tests\Unit\Exceptions\ErrorHandlerTest::testDebugResponseIncludesStackTrace
+Failed asserting that '\n
+            <h1>Unhandled Exception</h1>\n
+            <p><strong>Exception:</strong> Test</p>\n
+            <p><strong>File:</strong> /Users/elliotanderson/php/baremetalphp-src/tests/Unit/Exceptions/ErrorHandlerTest.php</p>\n
+            <p><strong>Line:</strong> 86</p>\n
+            <h2>Trace:</h2>\n
+            <pre>#0 /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestCase.php(1326): Tests\Unit\Exceptions\ErrorHandlerTest->testDebugResponseIncludesStackTrace()\n
+#1 /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestCase.php(519): PHPUnit\Framework\TestCase->runTest()\n
+#2 /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php(99): PHPUnit\Framework\TestCase->runBare()\n
+#3 /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestCase.php(359): PHPUnit\Framework\TestRunner->run(Object(Tests\Unit\Exceptions\ErrorHandlerTest))\n
+#4 /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(374): PHPUnit\Framework\TestCase->run()\n
+#5 /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(374): PHPUnit\Framework\TestSuite->run()\n
+#6 /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestSuite.php(374): PHPUnit\Framework\TestSuite->run()\n
+#7 /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(64): PHPUnit\Framework\TestSuite->run()\n
+#8 /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/TextUI/Application.php(229): PHPUnit\TextUI\TestRunner->run(Object(PHPUnit\TextUI\Configuration\Configuration), Object(PHPUnit\Runner\ResultCache\DefaultResultCache), Object(PHPUnit\Framework\TestSuite))\n
+#9 /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/phpunit(104): PHPUnit\TextUI\Application->run(Array)\n
+#10 /Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit(122): include('/Users/elliotan...')\n
+#11 {main}</pre>\n
+        ' [ASCII](length: 2043) contains "getTraceAsString" [ASCII](length: 16).
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Exceptions/ErrorHandlerTest.php:91
+
+3) Tests\Unit\Exceptions\ErrorPageRendererTest::testRenderEscapesHtml
+Failed asserting that '<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+    <meta charset="UTF-8">\n
+    <title>Unhandled Exception - RuntimeException</title>\n
+    <style>\n
+        * { box-sizing: border-box; }\n
+        body {\n
+            margin: 0;\n
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;\n
+            background: #0f172a;\n
+            color: #e5e7eb;\n
+        }\n
+        .wrapper {\n
+            max-width: 1100px;\n
+            margin: 40px auto;\n
+            padding: 0 16px;\n
+        }\n
+        .panel {\n
+            background: #020617;\n
+            border-radius: 10px;\n
+            box-shadow: 0 18px 45px rgba(0,0,0,0.6);\n
+            border: 1px solid #1f2937;\n
+            overflow: hidden;\n
+        }\n
+        .panel-header {\n
+            padding: 16px 20px;\n
+            border-bottom: 1px solid #1f2937;\n
+            background: linear-gradient(90deg, #111827, #020617);\n
+            display: flex;\n
+            align-items: center;\n
+            gap: 10px;\n
+        }\n
+        .panel-header .dot {\n
+            width: 10px;\n
+            height: 10px;\n
+            border-radius: 999px;\n
+        }\n
+        .dot.red { background: #ef4444; }\n
+        .dot.yellow { background: #facc15; }\n
+        .dot.green { background: #22c55e; }\n
+        .panel-header-title {\n
+            margin-left: 8px;\n
+            font-size: 14px;\n
+            color: #9ca3af;\n
+        }\n
+        h1 {\n
+            margin: 0;\n
+            font-size: 18px;\n
+            color: #f87171;\n
+        }\n
+        .exception-meta {\n
+            padding: 16px 20px;\n
+            border-bottom: 1px solid #1f2937;\n
+        }\n
+        .exception-meta-code {\n
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;\n
+            font-size: 13px;\n
+            color: #e5e7eb;\n
+        }\n
+        .exception-meta-path {\n
+            font-size: 12px;\n
+            color: #9ca3af;\n
+            margin-top: 4px;\n
+        }\n
+        .columns {\n
+            display: grid;\n
+            grid-template-columns: minmax(0, 2.5fr) minmax(0, 2fr);\n
+            border-top: 1px solid #000;\n
+        }\n
+        .col {\n
+            border-right: 1px solid #1f2937;\n
+        }\n
+        .col:last-child {\n
+            border-right: none;\n
+        }\n
+        .section-heading {\n
+            padding: 10px 16px;\n
+            border-bottom: 1px solid #1f2937;\n
+            font-size: 13px;\n
+            text-transform: uppercase;\n
+            letter-spacing: .08em;\n
+            color: #9ca3af;\n
+            background: #020617;\n
+        }\n
+        .code-block {\n
+            padding: 12px 16px 16px;\n
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;\n
+            font-size: 13px;\n
+            background: radial-gradient(circle at top, #020617, #020617);\n
+            overflow-x: auto;\n
+            border-bottom-left-radius: 10px;\n
+        }\n
+        .code-line {\n
+            white-space: pre;\n
+        }\n
+        .code-line span.ln {\n
+            display: inline-block;\n
+            width: 40px;\n
+            text-align: right;\n
+            margin-right: 8px;\n
+            color: #4b5563;\n
+            user-select: none;\n
+        }\n
+        .code-line.current {\n
+            background: rgba(239, 68, 68, 0.12);\n
+        }\n
+        .code-line.current span.ln {\n
+            color: #fca5a5;\n
+        }\n
+        .trace {\n
+            padding: 8px 16px 14px;\n
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;\n
+            font-size: 12px;\n
+            max-height: 520px;\n
+            overflow-y: auto;\n
+        }\n
+        .trace-item {\n
+            margin-bottom: 8px;\n
+            padding-bottom: 8px;\n
+            border-bottom: 1px dashed #1f2937;\n
+        }\n
+        .trace-item:last-child {\n
+            border-bottom: none;\n
+        }\n
+        .trace-fn {\n
+            color: #e5e7eb;\n
+        }\n
+        .trace-file {\n
+            color: #9ca3af;\n
+        }\n
+        .badge {\n
+            display: inline-block;\n
+            padding: 2px 6px;\n
+            border-radius: 999px;\n
+            font-size: 11px;\n
+            text-transform: uppercase;\n
+            letter-spacing: .08em;\n
+            background: rgba(148, 163, 184, 0.18);\n
+            color: #e5e7eb;\n
+        }\n
+        .badge.framework {\n
+            background: rgba(59, 130, 246, 0.16);\n
+            color: #93c5fd;\n
+        }\n
+        .badge.app {\n
+            background: rgba(34, 197, 94, 0.16);\n
+            color: #6ee7b7;\n
+        }\n
+        .trace-controls {\n
+            padding: 8px 16px 4px;\n
+            border-bottom: 1px solid #1f2937;\n
+            font-size: 11px;\n
+            color: #9ca3af;\n
+            display: flex;\n
+            align-items: center;\n
+            gap: 10px;\n
+        }\n
+        .trace-controls label {\n
+            display: inline-flex;\n
+            align-items: center;\n
+            gap: 4px;\n
+            cursor: pointer;\n
+        }\n
+        .trace-controls input[type="checkbox"] {\n
+            accent-color: #3b82f6;\n
+        }\n
+        .trace-item.framework {\n
+            opacity: 0.75;\n
+        }\n
+        .panel-section {\n
+            border-top: 1px solid #1f2937;\n
+        }\n
+        .request-block {\n
+            padding: 8px 16px 16px;\n
+            display: grid;\n
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);\n
+            gap: 12px;\n
+            font-size: 12px;\n
+        }\n
+        .request-meta {\n
+            margin-bottom: 10px;\n
+        }\n
+        .request-meta dt {\n
+            font-weight: 600;\n
+            color: #e5e7eb;\n
+            font-size: 12px;\n
+        }\n
+        .request-meta dd {\n
+            margin: 2px 0 8px;\n
+            color: #9ca3af;\n
+        }\n
+        .kv-box {\n
+            background: #020617;\n
+            border-radius: 6px;\n
+            border: 1px solid #1f2937;\n
+            padding: 6px 8px 8px;\n
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;\n
+            max-height: 220px;\n
+            overflow: auto;\n
+        }\n
+        .kv-box-title {\n
+            font-size: 11px;\n
+            text-transform: uppercase;\n
+            letter-spacing: .08em;\n
+            color: #9ca3af;\n
+            margin-bottom: 4px;\n
+        }\n
+        .kv-box pre {\n
+            margin: 0;\n
+            white-space: pre-wrap;\n
+            word-break: break-word;\n
+            font-size: 11px;\n
+            color: #e5e7eb;\n
+        }\n
+        footer {\n
+            margin-top: 12px;\n
+            font-size: 11px;\n
+            color: #6b7280;\n
+            text-align: right;\n
+        }\n
+        .copy-btn {\n
+            background: #1f2937;\n
+            border: 1px solid #374151;\n
+            color: #e5e7eb;\n
+            padding: 4px 10px;\n
+            border-radius: 6px;\n
+            font-size: 11px;\n
+            cursor: pointer;\n
+            transition: all 0.2s;\n
+            font-family: inherit;\n
+        }\n
+        .copy-btn:hover {\n
+            background: #374151;\n
+            border-color: #4b5563;\n
+        }\n
+        .copy-btn:active {\n
+            transform: scale(0.95);\n
+        }\n
+        .copy-btn.copied {\n
+            background: #22c55e;\n
+            border-color: #16a34a;\n
+            color: white;\n
+        }\n
+        #error-details {\n
+            display: none;\n
+            white-space: pre-wrap;\n
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;\n
+            font-size: 12px;\n
+            background: #020617;\n
+            padding: 12px;\n
+            border-radius: 6px;\n
+            border: 1px solid #1f2937;\n
+            max-height: 400px;\n
+            overflow: auto;\n
+            margin-top: 12px;\n
+        }\n
+    </style>\n
+</head>\n
+<body>\n
+<div class="wrapper">\n
+    <div class="panel">\n
+        <div class="panel-header">\n
+            <div class="dot red"></div>\n
+            <div class="dot yellow"></div>\n
+            <div class="dot green"></div>\n
+            <div class="panel-header-title">mini • debug</div>\n
+        </div>\n
+\n
+        <div class="exception-meta">\n
+            <div class="exception-meta-code" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">\n
+                <span class="badge">Unhandled Exception</span>\n
+                <span>RuntimeException</span>\n
+                <div style="margin-left: auto; display: flex; gap: 8px;">\n
+                    <button class="copy-btn" data-copy="error" title="Copy error message">📋 Copy Error</button>\n
+                    <button class="copy-btn" data-copy="trace" title="Copy stack trace">📋 Copy Trace</button>\n
+                    <button class="copy-btn" data-copy="all" title="Copy full error details">📋 Copy All</button>\n
+                </div>\n
+            </div>\n
+            <div class="exception-meta-code" style="margin-top: 6px; color:#f97373;" id="error-message">\n
+                &lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;\n
+            </div>\n
+            <div class="exception-meta-path">\n
+                in <strong>/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Exceptions/ErrorPageRendererTest.php</strong> on line <strong>115</strong>\n
+            </div>\n
+        </div>\n
+\n
+        <div class="columns">\n
+            <div class="col">\n
+                <div class="section-heading">Code Excerpt</div>\n
+                <div class="code-block">\n
+                    <div class="code-line"><span class="ln">109</span>        $this-&gt;assertStringContainsString(&#039;POST&#039;, $html);</div>\n
+<div class="code-line"><span class="ln">110</span>        $this-&gt;assertStringContainsString(&#039;/api/users&#039;, $html);</div>\n
+<div class="code-line"><span class="ln">111</span>    }</div>\n
+<div class="code-line"><span class="ln">112</span></div>\n
+<div class="code-line"><span class="ln">113</span>    public function testRenderEscapesHtml(): void</div>\n
+<div class="code-line"><span class="ln">114</span>    {</div>\n
+<div class="code-line current"><span class="ln">115</span>        $exception = new \RuntimeException(&#039;&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;&#039;);</div>\n
+<div class="code-line"><span class="ln">116</span>        $html = ErrorPageRenderer::render($exception);</div>\n
+<div class="code-line"><span class="ln">117</span>        </div>\n
+<div class="code-line"><span class="ln">118</span>        // Should escape HTML in exception message</div>\n
+<div class="code-line"><span class="ln">119</span>        $this-&gt;assertStringNotContainsString(&#039;&lt;script&gt;&#039;, $html);</div>\n
+<div class="code-line"><span class="ln">120</span>        $this-&gt;assertStringContainsString(&#039;&amp;lt;script&amp;gt;&#039;, $html);</div>\n
+<div class="code-line"><span class="ln">121</span>    }</div>\n
+                </div>\n
+            </div>\n
+            <div class="col">\n
+                <div class="section-heading">Stack Trace</div>\n
+                <div class="trace-controls">\n
+                    <span>Show frames:</span>\n
+                    <label><input type="checkbox" data-toggle="app" checked> <span class="badge app">App</span></label>\n
+                    <label><input type="checkbox" data-toggle="framework" checked> <span class="badge framework">Framework</span></label>\n
+                </div>\n
+                <div class="trace">\n
+                    <div class="trace-item app"><div class="trace-fn">#0 RuntimeException::() <span class="badge app">App</span></div><div class="trace-file">/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Exceptions/ErrorPageRendererTest.php:115</div></div>\n
+<div class="trace-item framework"><div class="trace-fn">#1 Tests\Unit\Exceptions\ErrorPageRendererTest-&gt;testRenderEscapesHtml() <span class="badge framework">Framework</span></div><div class="trace-file">/Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestCase.php:1326</div></div>\n
+<div class="trace-item framework"><div class="trace-fn">#2 PHPUnit\Framework\TestCase-&gt;runTest() <span class="badge framework">Framework</span></div><div class="trace-file">/Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestCase.php:519</div></div>\n
+<div class="trace-item framework"><div class="trace-fn">#3 PHPUnit\Framework\TestCase-&gt;runBare() <span class="badge framework">Framework</span></div><div class="trace-file">/Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php:99</div></div>\n
+<div class="trace-item framework"><div class="trace-fn">#4 PHPUnit\Framework\TestRunner-&gt;run() <span class="badge framework">Framework</span></div><div class="trace-file">/Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestCase.php:359</div></div>\n
+<div class="trace-item framework"><div class="trace-fn">#5 PHPUnit\Framework\TestCase-&gt;run() <span class="badge framework">Framework</span></div><div class="trace-file">/Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestSuite.php:374</div></div>\n
+<div class="trace-item framework"><div class="trace-fn">#6 PHPUnit\Framework\TestSuite-&gt;run() <span class="badge framework">Framework</span></div><div class="trace-file">/Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestSuite.php:374</div></div>\n
+<div class="trace-item framework"><div class="trace-fn">#7 PHPUnit\Framework\TestSuite-&gt;run() <span class="badge framework">Framework</span></div><div class="trace-file">/Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestSuite.php:374</div></div>\n
+<div class="trace-item framework"><div class="trace-fn">#8 PHPUnit\Framework\TestSuite-&gt;run() <span class="badge framework">Framework</span></div><div class="trace-file">/Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/TextUI/TestRunner.php:64</div></div>\n
+<div class="trace-item framework"><div class="trace-fn">#9 PHPUnit\TextUI\TestRunner-&gt;run() <span class="badge framework">Framework</span></div><div class="trace-file">/Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/TextUI/Application.php:229</div></div>\n
+<div class="trace-item framework"><div class="trace-fn">#10 PHPUnit\TextUI\Application-&gt;run() <span class="badge framework">Framework</span></div><div class="trace-file">/Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/phpunit:104</div></div>\n
+<div class="trace-item framework"><div class="trace-fn">#11 include() <span class="badge framework">Framework</span></div><div class="trace-file">/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122</div></div>\n
+                </div>\n
+            </div>\n
+        </div>\n
+\n
+        <div class="panel-section">\n
+            <div class="section-heading">Request Context</div>\n
+            <div class="request-block">\n
+    <div>\n
+        <dl class="request-meta">\n
+            <dt>Method</dt>\n
+            <dd>GET</dd>\n
+            <dt>URI</dt>\n
+            <dd>/</dd>\n
+            <dt>Client IP</dt>\n
+            <dd>unknown</dd>\n
+        </dl>\n
+    </div>    <div>\n
+        <div class="kv-box">\n
+    <div class="kv-box-title">GET</div>\n
+    <pre>(empty)</pre>\n
+</div>\n
+        <div class="kv-box">\n
+    <div class="kv-box-title">POST</div>\n
+    <pre>(empty)</pre>\n
+</div>\n
+    </div>\n
+</div>\n
+<div class="request-block">\n
+    <div>\n
+        <div class="kv-box">\n
+    <div class="kv-box-title">Cookies</div>\n
+    <pre>(empty)</pre>\n
+</div>\n
+    </div>\n
+    <div>\n
+        <div class="kv-box">\n
+    <div class="kv-box-title">Server / Headers</div>\n
+    <pre>(empty)</pre>\n
+</div>\n
+    </div>\n
+</div>\n
+        </div>\n
+\n
+        <div class="panel-section">\n
+            <div class="section-heading">Container / IoC Bindings</div>\n
+            <div class="request-block"></div>(container not available)</div></div>\n
+        </div>\n
+    </div>\n
+    <footer>\n
+        mini framework — debug mode  • share: {{__MINI_DEBUG_SHARE_URL__}}\n
+    </footer>\n
+</div>\n
+\n
+<script>\n
+(function () {\n
+    // Trace filter toggles\n
+    const toggles = document.querySelectorAll('.trace-controls [data-toggle]');\n
+    toggles.forEach(function (cb) {\n
+        cb.addEventListener('change', function () {\n
+            const type = this.getAttribute('data-toggle');\n
+            const items = document.querySelectorAll('.trace-item.' + type);\n
+            items.forEach(function (el) {\n
+                el.style.display = cb.checked ? '' : 'none';\n
+            });\n
+        });\n
+    });\n
+\n
+    // Copy functionality - prepare data\n
+    const errorMessage = {"message":"<script>alert(\u0022xss\u0022)<\/script>","trace":"#0 RuntimeException()\n   /Users/elliotanderson/php/baremetalphp-src/tests/Unit/Exceptions/ErrorPageRendererTest.php:115\n\n#1 Tests\\Unit\\Exceptions\\ErrorPageRendererTest->testRenderEscapesHtml()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestCase.php:1326\n\n#2 PHPUnit\\Framework\\TestCase->runTest()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestCase.php:519\n\n#3 PHPUnit\\Framework\\TestCase->runBare()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php:99\n\n#4 PHPUnit\\Framework\\TestRunner->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestCase.php:359\n\n#5 PHPUnit\\Framework\\TestCase->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestSuite.php:374\n\n#6 PHPUnit\\Framework\\TestSuite->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestSuite.php:374\n\n#7 PHPUnit\\Framework\\TestSuite->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestSuite.php:374\n\n#8 PHPUnit\\Framework\\TestSuite->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/TextUI/TestRunner.php:64\n\n#9 PHPUnit\\TextUI\\TestRunner->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/TextUI/Application.php:229\n\n#10 PHPUnit\\TextUI\\Application->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/phpunit:104\n\n#11 include()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122","all":"Exception: RuntimeException\nMessage: <script>alert(\u0022xss\u0022)<\/script>\nFile: /Users/elliotanderson/php/baremetalphp-src/tests/Unit/Exceptions/ErrorPageRendererTest.php\nLine: 115\n\nStack Trace:\n#0 RuntimeException()\n   /Users/elliotanderson/php/baremetalphp-src/tests/Unit/Exceptions/ErrorPageRendererTest.php:115\n\n#1 Tests\\Unit\\Exceptions\\ErrorPageRendererTest->testRenderEscapesHtml()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestCase.php:1326\n\n#2 PHPUnit\\Framework\\TestCase->runTest()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestCase.php:519\n\n#3 PHPUnit\\Framework\\TestCase->runBare()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestRunner/TestRunner.php:99\n\n#4 PHPUnit\\Framework\\TestRunner->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestCase.php:359\n\n#5 PHPUnit\\Framework\\TestCase->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestSuite.php:374\n\n#6 PHPUnit\\Framework\\TestSuite->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestSuite.php:374\n\n#7 PHPUnit\\Framework\\TestSuite->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/Framework/TestSuite.php:374\n\n#8 PHPUnit\\Framework\\TestSuite->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/TextUI/TestRunner.php:64\n\n#9 PHPUnit\\TextUI\\TestRunner->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/src/TextUI/Application.php:229\n\n#10 PHPUnit\\TextUI\\Application->run()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/phpunit/phpunit/phpunit:104\n\n#11 include()\n   /Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122"};\n
+    const errorData = {\n
+        error: errorMessage.message,\n
+        trace: errorMessage.trace,\n
+        all: errorMessage.all\n
+    };\n
+\n
+    document.querySelectorAll('.copy-btn').forEach(function(btn) {\n
+        btn.addEventListener('click', function() {\n
+            const type = this.getAttribute('data-copy');\n
+            const text = errorData[type] || '';\n
+            \n
+            if (navigator.clipboard && navigator.clipboard.writeText) {\n
+                navigator.clipboard.writeText(text).then(function() {\n
+                    const originalText = btn.textContent;\n
+                    btn.textContent = '✓ Copied!';\n
+                    btn.classList.add('copied');\n
+                    setTimeout(function() {\n
+                        btn.textContent = originalText;\n
+                        btn.classList.remove('copied');\n
+                    }, 2000);\n
+                }).catch(function() {\n
+                    fallbackCopy(text, btn);\n
+                });\n
+            } else {\n
+                fallbackCopy(text, btn);\n
+            }\n
+        });\n
+    });\n
+\n
+    function fallbackCopy(text, btn) {\n
+        const textarea = document.createElement('textarea');\n
+        textarea.value = text;\n
+        textarea.style.position = 'fixed';\n
+        textarea.style.opacity = '0';\n
+        document.body.appendChild(textarea);\n
+        textarea.select();\n
+        try {\n
+            document.execCommand('copy');\n
+            const originalText = btn.textContent;\n
+            btn.textContent = '✓ Copied!';\n
+            btn.classList.add('copied');\n
+            setTimeout(function() {\n
+                btn.textContent = originalText;\n
+                btn.classList.remove('copied');\n
+            }, 2000);\n
+        } catch (err) {\n
+            alert('Failed to copy. Please select and copy manually.');\n
+        }\n
+        document.body.removeChild(textarea);\n
+    }\n
+})();\n
+</script>\n
+</body>\n
+</html>' [UTF-8](length: 21852) does not contain "<script>" [ASCII](length: 8).
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Exceptions/ErrorPageRendererTest.php:119
+
+4) Tests\Unit\HelperFunctionsTest::testEnvFunctionTypeCasting
+Failed asserting that 'true' is true.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/HelperFunctionsTest.php:82
+
+5) Tests\Unit\Routing\RouterAdvancedTest::testThrowsExceptionInDebugModeForUnregisteredMethod
+Failed asserting that exception of type "RuntimeException" is thrown.
+
+6) Tests\Unit\Routing\RouterAdvancedTest::testThrowsExceptionInDebugModeForNonExistentRoute
+Failed asserting that exception of type "RuntimeException" is thrown.
+
+7) Tests\Feature\HttpKernelTest::testKernelHandlesExceptionsInDebugMode
+Failed asserting that 'Internal Server Error' [ASCII](length: 21) contains "RuntimeException" [ASCII](length: 16).
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/HttpKernelTest.php:75
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+8) Tests\Feature\HttpKernelTest::testKernelHandlesApiRequestErrorsInDebugMode
+Failed asserting that an array has the key 'file'.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/HttpKernelTest.php:150
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+--
+
+There were 14 risky tests:
+
+1) Tests\Unit\MakeMigrationCommandTest::testMigrationHasTimestamp
+Test code or tested code printed unexpected output: Migration created: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_migration_test_6939f77556301/database/migrations/20251210224301_test_migration.php
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/MakeMigrationCommandTest.php:89
+
+2) Tests\Unit\MakeMigrationCommandTest::testCreatesMigrationsDirectory
+Test code or tested code printed unexpected output: Migration created: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_migration_test_6939f7755667b/database/migrations/20251210224301_test_migration.php
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/MakeMigrationCommandTest.php:102
+
+3) Tests\Unit\MakeControllerCommandTest::testCreatesDirectoryStructure
+Test code or tested code printed unexpected output: Controller created: app/Http/Controllers/TestController.php
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/MakeControllerCommandTest.php:79
+
+4) Tests\Unit\WebSocket\WebSocketTest::testBroadcastHandlesJsonEncodeFailure
+Test code or tested code printed unexpected output: WebSocket broadcast: failed to encode payload
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/WebSocket/WebSocketTest.php:77
+
+5) Tests\Feature\InstallGoAppServerCommandTest::testCanInstallGoServerFiles
+Test code or tested code did not close its own output buffers
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:52
+
+6) Tests\Feature\InstallGoAppServerCommandTest::testGoFilesContainCorrectContent
+Test code or tested code printed unexpected output: Installing Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_6939f77564969
+Created go.mod with module name: baremetal_test_6939f77564969
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:142
+
+7) Tests\Feature\InstallGoAppServerCommandTest::testPhpFilesContainCorrectContent
+Test code or tested code printed unexpected output: Installing Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_6939f77564b9b
+Created go.mod with module name: baremetal_test_6939f77564b9b
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:233
+
+8) Tests\Feature\InstallGoAppServerCommandTest::testGoConfigFileReflectsAppServerConfig
+Test code or tested code printed unexpected output: Installing Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_6939f77564d9e
+Created go.mod with module name: baremetal_test_6939f77564d9e
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:260
+
+9) Tests\Feature\InstallGoAppServerCommandTest::testGoModUsesCorrectModuleName
+Test code or tested code printed unexpected output: Installing Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_6939f77565072
+Created go.mod with module name: baremetal_test_6939f77565072
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:317
+
+10) Tests\Feature\GoServeCommandTest::testShowsDisabledMessageWhenNotEnabled
+Test code or tested code did not close its own output buffers
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/GoServeCommandTest.php:60
+
+11) Tests\Feature\GoServeCommandTest::testGoServeShowsDisabledMessageWhenNotEnabled
+Test code or tested code did not close its own output buffers
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/GoServeCommandTest.php:113
+
+12) Tests\Feature\GoServeCommandTest::testGoServeDryRunPrintsCommand
+Test code or tested code did not close its own output buffers
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/GoServeCommandTest.php:130
+
+13) Tests\Feature\GoServeCommandTest::testDryRunShowsCommand
+Test code or tested code did not close its own output buffers
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/GoServeCommandTest.php:36
+
+14) Tests\Feature\MigrateCommandTest::testCreatesMigrationsTable
+Test code or tested code printed unexpected output: No migration files found.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/MigrateCommandTest.php:158
+
+ERRORS!
+Tests: 510, Assertions: 921, Errors: 63, Failures: 8, PHPUnit Notices: 10, Skipped: 4, Risky: 14.

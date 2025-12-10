@@ -11,6 +11,7 @@ use ReflectionParameter;
 use BareMetalPHP\Support\Config;
 use BareMetalPHP\Support\Facades\AliasLoader;
 use BareMetalPHP\Support\Facades\Facade;
+use BareMetalPHP\Config\Repository as ConfigRepository;
 
 class Application
 {
@@ -23,6 +24,8 @@ class Application
     protected array $singletons = [];
 
     protected array $instances = [];
+
+    protected ?ConfigRepository $config = null;
 
     /**
      * @var ServiceProvider[]
@@ -171,10 +174,16 @@ class Application
 
     protected function resolveParameter(ReflectionParameter $param): mixed
     {
+        // If parameter has a default value, use it
+        if ($param->isDefaultValueAvailable()) {
+            return $param->getDefaultValue();
+        }
+
         $type = $param->getType();
 
+        // If no type or built-in type without default, we can't resolve it
         if (! $type || $type->isBuiltin()) {
-            throw new \RuntimeException("Cannot resolve parameter {$param->getName()}");
+            throw new \RuntimeException("Cannot resolve parameter {$param->getName()} of class " . ($param->getDeclaringClass() ? $param->getDeclaringClass()->getName() : 'unknown'));
         }
 
         return $this->make($type->getName());
@@ -206,6 +215,11 @@ class Application
             return;
         }
 
+        // Make sure the Facade base class knows about the app
+        // __before__ anything else might resolve facades.
+        Facade::setFacadeApplication($this);
+
+        // Boot all service providers
         foreach ($this->serviceProviders as $provider) {
             $provider->boot();
         }
@@ -214,21 +228,14 @@ class Application
         // Register facade aliases if completed.
         $aliases = [];
 
-        try {
-            // If config system is not yet initialized, this will just throw
-            $aliases = Config::get('app.aliases', []);
-        } catch (\Throwable $e) {
-            // Fail quietly if config isn't available for some reason.
-            $aliases = [];
+        if ($this->config !== null) {
+            $aliases = $this->config->get('app.aliases', []);
         }
 
         if (! empty($aliases)) {
             $loader = AliasLoader::getInstance($aliases);
             $loader->register();
         }
-
-        // Let the Facade base know about the app instance.
-        Facade::setFacadeApplication($this);
 
         $this->booted = true;
     }
@@ -242,4 +249,24 @@ class Application
     {
         return $this->booted;
     }
+
+    public function setConfig(ConfigRepository $config): void
+    {
+        $this->config = $config;
+    }
+
+    public function config(?string $key = null, mixed $default = null): mixed
+    {
+        if (! $this->config) {
+            return $default;
+        }
+
+        if ($key === null) {
+            return $this->config;
+        }
+
+        return $this->config->get($key, $default);
+    }
+
+
 }
