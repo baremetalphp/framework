@@ -48,7 +48,7 @@ class RouterAdvancedTest extends TestCase
             public function handle(Request $request, callable $next): Response
             {
                 $response = $next($request);
-                $response->setHeader('X-Middleware', 'applied');
+                $response->header('X-Middleware', 'applied');
                 return $response;
             }
         };
@@ -71,7 +71,7 @@ class RouterAdvancedTest extends TestCase
             public function handle(Request $request, callable $next): Response
             {
                 $response = $next($request);
-                $response->setHeader('X-Middleware-1', 'applied');
+                $response->header('X-Middleware-1', 'applied');
                 return $response;
             }
         };
@@ -80,7 +80,7 @@ class RouterAdvancedTest extends TestCase
             public function handle(Request $request, callable $next): Response
             {
                 $response = $next($request);
-                $response->setHeader('X-Middleware-2', 'applied');
+                $response->header('X-Middleware-2', 'applied');
                 return $response;
             }
         };

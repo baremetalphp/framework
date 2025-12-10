@@ -88,7 +88,10 @@ class ErrorHandlerTest extends TestCase
         $response = $handler->handle($exception);
         $body = $response->getBody();
         
-        $this->assertStringContainsString('getTraceAsString', $body);
+        // The trace is included in the response (via getTraceAsString internally)
+        // Check for trace indicators instead
+        $this->assertStringContainsString('Trace:', $body);
+        $this->assertStringContainsString('#0', $body);
         
         putenv('APP_DEBUG=false');
         $_ENV['APP_DEBUG'] = 'false';

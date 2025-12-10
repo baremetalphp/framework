@@ -292,9 +292,13 @@ class BelongsToManyTest extends TestCase
         $roles = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
         $this->assertCount(2, $roles);
-        // SQLite returns strings, so convert IDs to strings for comparison
-        $this->assertContains((string)$role2->id, $roles);
-        $this->assertContains((string)$role3->id, $roles);
+        // SQLite returns strings, so convert both to strings for comparison
+        // Also ensure role IDs are converted to strings
+        $roleIds = array_map('strval', $roles);
+        $expectedRole2 = (string)$role2->id;
+        $expectedRole3 = (string)$role3->id;
+        $this->assertContains($expectedRole2, $roleIds, "Expected role2 id '{$expectedRole2}' not found in roles: " . json_encode($roleIds));
+        $this->assertContains($expectedRole3, $roleIds, "Expected role3 id '{$expectedRole3}' not found in roles: " . json_encode($roleIds));
     }
 
     public function testSyncWithoutDetaching(): void

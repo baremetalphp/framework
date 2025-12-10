@@ -72,20 +72,8 @@ if (!function_exists('config')) {
      */
     function config(string $key, mixed $default = null): mixed
     {
-        $app = Application::getInstance();
-
-        if (! $app) {
-            return $default;
-        }
-
-        /** @var ConfigRepository $repo */
-        $repo = $app->make(ConfigRepository::class);
-
-        if ($key === null) {
-            return $repo;
-        }
-
-        return $repo->get($key, $default);
+        // Use Config class directly instead of ConfigRepository
+        return \BareMetalPHP\Support\Config::get($key, $default);
     }
 }
 
@@ -105,7 +93,9 @@ if (!function_exists('app_debug')) {
      */
     function app_debug(): bool
     {
-        return Env::get('APP_DEBUG', false) === true;
+        $value = Env::get('APP_DEBUG', false);
+        // Handle both string 'true' and boolean true
+        return $value === true || $value === 'true' || $value === '1';
     }
 }
 
