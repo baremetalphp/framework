@@ -154,7 +154,7 @@ class ColumnDefinitionTest extends TestCase
 
     public function testFluentInterface(): void
     {
-        $column = new ColumnDefinition('email', 'VARCHAR')
+        $column = (new ColumnDefinition('email', 'VARCHAR'))
             ->length(255)
             ->nullable()
             ->unique()
