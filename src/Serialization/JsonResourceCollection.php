@@ -8,7 +8,7 @@ use IteratorAggregate;
 use Traversable;
 use JsonSerializable;
 
-class JsonResourceCollection implements IteratorAggregate, JsonSerializable
+class JsonResourceCollection extends JsonResource implements IteratorAggregate, JsonSerializable
 {
 
     /**
@@ -34,6 +34,17 @@ class JsonResourceCollection implements IteratorAggregate, JsonSerializable
             /** @var JsonResource $resource */
             $result[] = $resource->jsonSerialize();
         }
+        return $result;
+    }
+
+    public function toArray(): array
+    {
+        $result = [];
+
+        foreach ($this->getIterator() as $resource) {
+            $result[] = $resource->toArray();
+        }
+
         return $result;
     }
 }
