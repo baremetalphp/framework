@@ -140,6 +140,7 @@ class AssetManager
 
         // When using React, inject React preamble
         $framework = Config::get('frontend.framework', null);
+        $reactPreamble = '';
 
         if ($framework === 'react') {
             $reactPreamble = <<<HTML

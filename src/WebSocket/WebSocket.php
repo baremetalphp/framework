@@ -37,7 +37,7 @@ class WebSocket
 
     public static function user(string|int $userId): self
     {
-        return new self('user:', $userId);
+        return new self('user:' . $userId);
     }
 
     public function type(string $type): self

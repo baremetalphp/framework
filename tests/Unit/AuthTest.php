@@ -81,6 +81,21 @@ class AuthTest extends TestCase
 
     public function testAttemptReturnsNullForInvalidEmail(): void
     {
+        // Need to set up database for Auth::attempt() to work (it queries User model)
+        $this->needsDatabase = true;
+        $this->setUpDatabase();
+        
+        $this->createTable('users', <<<SQL
+            CREATE TABLE users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL,
+                password TEXT,
+                created_at TEXT,
+                updated_at TEXT
+            )
+        SQL);
+        
         $result = Auth::attempt('nonexistent@example.com', 'password');
         
         $this->assertNull($result);
