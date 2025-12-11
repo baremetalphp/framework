@@ -16,12 +16,6 @@ class EnvTest extends TestCase
         parent::setUp();
         $this->envFile = sys_get_temp_dir() . '/.env.test';
         
-        // Reset Env loaded state
-        $reflection = new \ReflectionClass(\BareMetalPHP\Support\Env::class);
-        $property = $reflection->getProperty('loaded');
-        $property->setAccessible(true);
-        $property->setValue(null, false);
-        
         // Clear any existing env vars
         putenv('APP_NAME');
         putenv('APP_DEBUG');

@@ -63,8 +63,14 @@ class RedirectTest extends TestCase
 
     public function testBackUsesRequestRefererWhenProvided(): void
     {
-        $request = $this->createMock(Request::class);
-        $request->method('header')->with('Referer')->willReturn('/request-referer');
+        // Create a concrete Request instance with Referer header
+        // Can't use createMock because Request has a method() method which conflicts with PHPUnit's method()
+        $server = [
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/test',
+            'HTTP_REFERER' => '/request-referer',
+        ];
+        $request = Request::fromParts($server, '');
         
         $redirect = Redirect::back($request);
         

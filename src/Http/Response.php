@@ -2,6 +2,9 @@
 
 namespace BareMetalPHP\Http;
 
+use BareMetalPHP\Application;
+use BareMetalPHP\Serialization\Serializer;
+
 class Response
 {
     public function __construct(
@@ -53,4 +56,33 @@ class Response
     {
         return $this->headers;
     }
+
+    public static function json(
+        mixed $data,
+        int $status = 200,
+        array $headers = [],
+        array $context = []
+    ): self {
+        $app = Application::getInstance();
+        $content = null;
+
+        if ($app) {
+            try {
+                /** @var Serializer $serializer */
+                $serializer = $app->make(Serializer::class);
+                $content = $serializer->serialize($data, 'json', $context);
+            } catch (\Throwable $e) {
+                // fallback to bare json_encode if the serializer is not available
+                $content = json_encode($data);
+            }
+        } else {
+            $content = json_encode($data);
+        }
+
+        $headers['Content-Type'] = $headers['Content-Type'] ?? 'application/json';
+
+        return new static((string) $content, $status, $headers);
+    }
+
+    
 }

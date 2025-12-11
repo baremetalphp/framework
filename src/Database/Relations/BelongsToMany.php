@@ -197,8 +197,8 @@ class BelongsToMany
         }
 
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
-        $sql = "DELETE FROM {$quotedPivotTable} WHERE {$quotedForeignPivotKey} = :parent_id AND {$quotedRelatedPivotKey} IN ({$placeholders})";
-        $bindings = array_merge(['parent_id' => $parentValue], $ids);
+        $sql = "DELETE FROM {$quotedPivotTable} WHERE {$quotedForeignPivotKey} = ? AND {$quotedRelatedPivotKey} IN ({$placeholders})";
+        $bindings = array_merge([$parentValue], $ids);
         $stmt = $pdo->prepare($sql);
         $stmt->execute($bindings);
 
@@ -211,6 +211,10 @@ class BelongsToMany
     public function sync(array $ids, bool $detaching = true): array
     {
         $current = $this->getPivotIds();
+        // Convert current IDs to integers for comparison (SQLite returns strings)
+        $current = array_map('intval', $current);
+        // Ensure input IDs are integers
+        $ids = array_map('intval', $ids);
         
         $detach = [];
         $attach = [];

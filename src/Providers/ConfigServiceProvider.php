@@ -7,6 +7,7 @@ namespace BareMetalPHP\Providers;
 use BareMetalPHP\Support\Config;
 use BareMetalPHP\Support\Env;
 use BareMetalPHP\Support\ServiceProvider;
+use BareMetalPHP\Config\Repository as ConfigRepository;
 
 class ConfigServiceProvider extends ServiceProvider
 {
@@ -22,8 +23,17 @@ class ConfigServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Load configuration files
+        // Load configuration files using static Config class
         Config::load();
+        
+        // Create ConfigRepository from the loaded config data
+        // This unifies the two config systems - static Config and Repository
+        $configData = Config::all();
+        $configRepository = new ConfigRepository($configData);
+        
+        // Register ConfigRepository in the container and application
+        $this->app->instance(ConfigRepository::class, $configRepository);
+        $this->app->setConfig($configRepository);
     }
 
     protected function loadEnvironmentFile(): void

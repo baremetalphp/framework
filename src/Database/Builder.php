@@ -221,7 +221,7 @@ class Builder
 
             // Simple eager loading: trigger each relationship once per model so that
             // subsequent access does not hit the database.
-            if (!empty($this->eagerLoad) ** method_exists($class, 'eagerLoadCollection')) {
+            if (!empty($this->eagerLoad) && method_exists($class, 'eagerLoadCollection')) {
                 $class::eagerLoadCollection($collection, array_keys($this->eagerLoad));
             }
 

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use BareMetalPHP\Container\Container;
 use BareMetalPHP\Database\Schema\SchemaBuilder;
+use BareMetalPHP\Support\Env;
+use BareMetalPHP\Application;
+use BareMetalPHP\Config\Repository as ConfigRepository;
 
 if (!function_exists('dd')) {
     /**
@@ -69,6 +72,7 @@ if (!function_exists('config')) {
      */
     function config(string $key, mixed $default = null): mixed
     {
+        // Use Config class directly instead of ConfigRepository
         return \BareMetalPHP\Support\Config::get($key, $default);
     }
 }
@@ -79,7 +83,7 @@ if (!function_exists('env')) {
      */
     function env(string $key, mixed $default = null): mixed
     {
-        return \BareMetalPHP\Support\Env::get($key, $default);
+        return Env::get($key, $default);
     }
 }
 
@@ -89,7 +93,9 @@ if (!function_exists('app_debug')) {
      */
     function app_debug(): bool
     {
-        return \BareMetalPHP\Support\Env::get('APP_DEBUG', false) === true;
+        $value = Env::get('APP_DEBUG', false);
+        // Handle both string 'true' and boolean true
+        return $value === true || $value === 'true' || $value === '1';
     }
 }
 
@@ -352,3 +358,9 @@ if (!function_exists('session')) {
     }
 }
 
+if (!function_exists('env')) {
+    function env(string $key, mixed $default = null): mixed
+    {
+        return Env::get($key, $default);
+    } 
+}
