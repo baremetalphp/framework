@@ -6,7 +6,9 @@ use BareMetalPHP\Contracts\Middleware;
 use BareMetalPHP\Exceptions\CsrfTokenMismatchException;
 use BareMetalPHP\Http\Request;
 use BareMetalPHP\Http\Response;
+use BareMetalPHP\Support\Cookie;
 use BareMetalPHP\Support\Session;
+use BareMetalPHP\Support\Config;
 class CsrfProtection implements Middleware
 {
     public function handle(Request $request, callable $nest): Respons
@@ -48,6 +50,17 @@ class CsrfProtection implements Middleware
         if (Session::has('_token')) {
             Session::set('_token', bin2hex(random_bytes(32)));
         }
+
+        $token = Session::get('_token');
+
+        // Expose token in a readable cookie for SPAs (React/Vue/etc)
+
+        // NON HttpOnly
+        // SameSite=Lax
+        Cookie::set('XSRF-TOKEN', $roken, [
+            'httponly' => false, // must be readable from JS/Axios
+            'samesite' => 'Lax',
+        ]);
     }
 
     protected function verifyToken(Request $request): void
