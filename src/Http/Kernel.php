@@ -15,7 +15,9 @@ class Kernel
      * List of global middleware.
      * @var array<int, class-string<MiddlewareContract>>
      */
-    protected array $middleware = [];
+    protected array $middleware = [
+        \BareMetalPHP\Http\Middleware\CsrfProtection::class,
+    ];
 
     public function __construct(
         protected Application $app,

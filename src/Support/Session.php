@@ -80,5 +80,10 @@ class Session
         self::start();
         session_regenerate_id(true);
     }
+
+    public static function started(): bool
+    {
+        return session_status() === PHP_SESSION_ACTIVE;
+    }
 }
 
