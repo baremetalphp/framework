@@ -46,6 +46,7 @@ class Application
             'frontend:install' => Commands\InstallFrontendCommand::class,
             'go:install' => Commands\InstallGoAppServerCommand::class,
             'go:serve' => Commands\GoServeCommand::class,
+            'seed' => Commands\SeedDatabaseCommand::class,
         ];
 
     }
