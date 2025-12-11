@@ -32,6 +32,20 @@ abstract class Model implements ArrayAccess
 
     protected static string $table;
 
+    /**
+     * Mass assignable attributes.
+     *
+     * @var string[] $fillable
+     */
+    protected array $fillable = [];
+
+    /**
+     * The attributes that aren't mass-assignable.
+     * By default, everything is guarded until explicitly allowed via $fillable.
+     *
+     * @var string[] $guarded
+     */
+    protected array $guarded = ['*'];
     protected bool $timestamps = true;
 
     protected array $attributes = [];
@@ -67,6 +81,45 @@ abstract class Model implements ArrayAccess
         if (isset($attributes['id'])) {
             $this->exists = true;
         }
+    }
+
+    /**
+     * Fill the model with an array of attributes, applying mass-assignment rules.
+     *
+     * @param array<string, mixed> $attributes
+     * @return $this
+     */
+    public function fill(array $attributes): static
+    {
+        foreach ($attributes as $key => $value) {
+            if (! $this->isFillable($key)) {
+                continue;
+            }
+
+            $this->setAttribute($key, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Determine if the given key is mass assignable.
+     * 
+     * @param string $key
+     * @return bool
+     */
+    protected function isFillable(string $key): bool
+    {
+        // Explicitly fillable
+        if (in_array($key, $this->fillable, true)) {
+            return true;
+        }
+
+        if (in_array('*', $this->guarded, true)) {
+            return false;
+        }
+
+        return ! in_array($key, $this->guarded, true);
     }
 
     // called once during bootstrap
