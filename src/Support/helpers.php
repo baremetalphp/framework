@@ -7,6 +7,8 @@ use BareMetalPHP\Database\Schema\SchemaBuilder;
 use BareMetalPHP\Support\Env;
 use BareMetalPHP\Application;
 use BareMetalPHP\Config\Repository as ConfigRepository;
+use BareMetalPHP\Support\Session;
+use function htmlspecialchars;
 
 if (!function_exists('dd')) {
     /**
@@ -362,5 +364,23 @@ if (!function_exists('env')) {
     function env(string $key, mixed $default = null): mixed
     {
         return Env::get($key, $default);
-    } 
+    }
+}
+
+if (!function_exists('csrf_token')) {
+    function csrf_token(): string
+    {
+        if (! Session::started()) {
+            Session::start();
+        }
+
+        return Session::get('_token') ?? '';
+    }
+}
+
+if (! function_exists('csrf_field')) {
+    function csrf_field(): string
+    {
+        return '<input type="hidden" name="_token" value="' . htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') . '">';
+    }
 }

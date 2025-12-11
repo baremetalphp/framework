@@ -52,6 +52,11 @@ class Request
         return $this->server['REQUEST_URI'] ?? '/';
     }
 
+    public function get(?string $key = null, mixed $default = null): mixed
+    {
+        return $this->input($key, $default);
+    }
+
     public function query(?string $key = null, mixed $default = null): mixed
     {
         if ($key === null) {

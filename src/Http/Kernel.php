@@ -2,33 +2,49 @@
 
 namespace BareMetalPHP\Http;
 
+use BareMetalPHP\Contracts\Middleware;
 use BareMetalPHP\Routing\Router;
 use BareMetalPHP\Application;
 use BareMetalPHP\Http\Request;
 use BareMetalPHP\Http\Response;
 use BareMetalPHP\Exceptions\ErrorPageRenderer;
+use BareMetalPHP\Contracts\Middleware as MiddlewareContract;
 class Kernel 
 {
-    public function __construct(protected Application $app, protected Router $router)
-    {}
-
     /**
      * List of global middleware.
-     * @var string[]
+     * @var array<int, class-string<MiddlewareContract>>
      */
-    protected array $middleware = [];
+    protected array $middleware = [
+        \BareMetalPHP\Http\Middleware\CsrfProtection::class,
+    ];
+
+    public function __construct(
+        protected Application $app,
+        protected Router $router,
+    ) {}
 
     public function handle(Request $request): Response
     {
         try {
             $pipeline = array_reduce(
                 array_reverse($this->middleware),
-                function (callable $next, string $middlewareClass) {
+                function (callable $next, string $middlewareClass): callable {
                     return function (Request $request) use ($next, $middlewareClass): Response {
+                        // Resolve middleware from container
                         $middleware = $this->app->make($middlewareClass);
+
+                        if (! $middleware instanceof MiddlewareContract) {
+                            throw new \RuntimeException(sprintf(
+                                'Middleware "%s" must implement "%s"',
+                                $middlewareClass,
+                                MiddlewareContract::class
+                            ));
+                        }
                         return $middleware->handle($request, $next);
                     };
                 },
+                // final handler -- dispatch to router
                 fn (Request $request): Response => $this->router->dispatch($request)
             );
             return $pipeline($request);
