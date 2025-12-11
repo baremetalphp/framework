@@ -53,7 +53,10 @@ class CsrfProtection implements Middleware
 
         $token = Session::get('_token');
 
-        // Expose token in a readable cookie for SPAs (React/Vue/etc)
+        if ($token === null) {
+            $token = bin2hex(random_bytes(32));
+            Session::set('_token', $token);
+        }
 
         // NON HttpOnly
         // SameSite=Lax
