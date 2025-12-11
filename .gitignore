@@ -22,3 +22,5 @@ Thumbs.db
 .env.*
 !.env.example
 
+_coverage/
+tree
