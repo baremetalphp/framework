@@ -8,7 +8,6 @@ use BareMetalPHP\Support\Env;
 use BareMetalPHP\Application;
 use BareMetalPHP\Config\Repository as ConfigRepository;
 use BareMetalPHP\Support\Session;
-use function htmlspecialchars;
 
 if (!function_exists('dd')) {
     /**

@@ -8,12 +8,12 @@ use BareMetalPHP\Http\Request;
 use BareMetalPHP\Http\Response;
 use BareMetalPHP\Support\Cookie;
 use BareMetalPHP\Support\Session;
-use BareMetalPHP\Support\Config;
+use Random\RandomException;
+
 class CsrfProtection implements Middleware
 {
-    public function handle(Request $request, callable $nest): Respons
+    public function handle(Request $request, callable $next): Response
     {
-        // Ensure a CSRF token exists for this session (for GET requests, etc.)
         $this->ensureToken();
 
         if ($this->isReading($request)) {
@@ -39,7 +39,7 @@ class CsrfProtection implements Middleware
      * Ensure there is a CSRF token started in the session.
      *
      * @return void
-     * @throws \Random\RandomException
+     * @throws RandomException
      */
     protected function ensureToken(): void
     {
@@ -57,7 +57,7 @@ class CsrfProtection implements Middleware
 
         // NON HttpOnly
         // SameSite=Lax
-        Cookie::set('XSRF-TOKEN', $roken, [
+        Cookie::set('XSRF-TOKEN', $token, [
             'httponly' => false, // must be readable from JS/Axios
             'samesite' => 'Lax',
         ]);
