@@ -17,12 +17,14 @@ class RelationUser extends Model
 {
     protected static string $table = 'users';
     protected bool $timestamps = false;
+    protected array $fillable = ['name', 'email'];
 }
 
 class RelationPost extends Model
 {
     protected static string $table = 'posts';
     protected bool $timestamps = false;
+    protected array $fillable = ['user_id', 'title'];
     
     public function user()
     {
@@ -34,6 +36,7 @@ class RelationProfile extends Model
 {
     protected static string $table = 'profiles';
     protected bool $timestamps = false;
+    protected array $fillable = ['user_id', 'bio'];
     
     public function user()
     {
@@ -45,6 +48,7 @@ class RelationUserWithRelations extends Model
 {
     protected static string $table = 'users';
     protected bool $timestamps = false;
+    protected array $fillable = ['name', 'email'];
     
     public function posts()
     {

@@ -56,7 +56,7 @@ class Builder
         $this->pdo        = $pdo;
         $this->table      = $table;
         $this->modelClass = $modelClass;
-        
+
         // Store connection for driver access
         // If not provided, try to get it from a static connection if available
         if ($connection === null) {
@@ -80,7 +80,7 @@ class Builder
         $pdoProperty = $connection->getProperty('pdo');
         $pdoProperty->setAccessible(true);
         $pdoProperty->setValue($instance, $pdo);
-        
+
         return $instance;
     }
 
@@ -111,7 +111,7 @@ class Builder
 
     /**
      * Specify relationships to eager load.
-     * 
+     *
      * Example:
      *     User::query()->with('posts', 'profile')->get()
      *     User::query()->with(['posts', 'profile'])->get()
@@ -162,17 +162,37 @@ class Builder
 
     public function whereIn(string $column, array $values): self
     {
-        $this->wheres[] = ['AND', $column, 'IN', $values];
+        // empty values for IN, condition should match nothing but sql must still be valid
+        if (empty($values)) {
+            $this->wheres[] = ['AND', '1 = 0', 'RAW', null];
+
+            return $this;
+        }
+
+
+        $this->wheres[] = ['AND', $column, 'IN', array_values($values)];
         return $this;
     }
 
     public function whereNotIn(string $column, array $values): self
     {
-        $this->wheres[] = ['AND', $column, 'NOT IN', $values];
+        // Empty NOT IN matches everything (no restrictions).
+        if (empty($values)) {
+            // we can safely ignore it
+            return $this;
+        }
+        $this->wheres[] = ['AND', $column, 'NOT IN', array_values($values)];
         return $this;
     }
 
-    
+    public function whereRaw(string $sql, string $boolean = 'AND'): self
+    {
+        $this->wheres[] = [$boolean, $sql, 'RAW', null];
+
+        return $this;
+    }
+
+
 
     public function orderBy(string $column, string $direction = 'ASC'): self
     {
@@ -252,7 +272,7 @@ class Builder
     {
         $driver = $this->connection->getDriver();
         $quotedTable = $driver->quoteIdentifier($this->table);
-        
+
         $sql      = 'SELECT * FROM ' . $quotedTable;
         $bindings = [];
 
@@ -324,5 +344,5 @@ class Builder
         return $sql;
     }
 
-    
+
 }

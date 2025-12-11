@@ -77,9 +77,14 @@ abstract class Model implements ArrayAccess
 
     public function __construct(array $attributes = [])
     {
-        $this->fill($attributes);
+        // If attributes come from database (have 'id'), set them directly without fillable check
         if (isset($attributes['id'])) {
             $this->exists = true;
+            foreach ($attributes as $key => $value) {
+                $this->setAttribute($key, $value);
+            }
+        } else {
+            $this->fill($attributes);
         }
     }
 
@@ -587,6 +592,11 @@ abstract class Model implements ArrayAccess
 
         [$connection, $driver, $pdo] = $this->getConnectionComponents();
         $preparedAttributes = $this->prepareAttributes($this->attributes, $driver);
+
+        // Prevent empty INSERT statements
+        if (empty($preparedAttributes)) {
+            return false;
+        }
 
         $columns = array_keys($preparedAttributes);
         $quotedColumns = $this->quoteIdentifiers($columns, $driver);

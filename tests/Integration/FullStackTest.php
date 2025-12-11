@@ -86,5 +86,6 @@ class FullStackTest extends TestCase
 class TestUser extends Model
 {
     protected static string $table = 'users';
+    protected array $fillable = ['name', 'email'];
 }
 

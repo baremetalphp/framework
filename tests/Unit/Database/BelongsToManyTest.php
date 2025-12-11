@@ -381,11 +381,13 @@ class TestUserForBelongsToMany extends Model
 {
     protected static string $table = 'users';
     protected bool $timestamps = false;
+    protected array $fillable = ['name'];
 }
 
 class TestRole extends Model
 {
     protected static string $table = 'roles';
     protected bool $timestamps = false;
+    protected array $fillable = ['name'];
 }
 
