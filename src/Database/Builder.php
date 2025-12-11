@@ -32,6 +32,22 @@ class Builder
      */
     protected array $orders = [];
 
+    /**
+     * Columns that are allowed to be used in ORDER BY clauses.
+     *
+     * If empty, a conservative identifier pattern will be used instead.
+     *
+     * @var string[]
+     */
+    protected array $allowedOrderColumns = [];
+
+    /**
+     * Columns that are safe to sort on via orderBy().
+     *
+     * @var string[] $sortable
+     */
+    protected array $sortable = [];
+
     protected ?int $limit = null;
     protected ?int $offset = null;
 
@@ -160,6 +176,10 @@ class Builder
 
     public function orderBy(string $column, string $direction = 'ASC'): self
     {
+        if (! $this->isAllowedOrderColumn($column)) {
+            throw new \InvalidArgumentException("Invalid order by column: {$column}");
+        }
+
         $direction = strtoupper($direction);
         if (!in_array($direction, ['ASC', 'DESC'], true)) {
             $direction = 'ASC';
@@ -179,6 +199,53 @@ class Builder
     {
         $this->offset = $offset;
         return $this;
+    }
+
+    /**
+     * Determine if the given column is allowed in ORDER BY clauses.
+     *
+     * @param string $column
+     * @return bool
+     */
+    protected function isAllowedOrderColumn(string $column): bool
+    {
+        // If an explicit allowlist has been set, enforce it strictly.
+        if (!empty($this->allowedOrderColumns)) {
+            return in_array($column, $this->allowedOrderColumns, true);
+        }
+
+        // Fallback: allow only simple identifiers (no spaces, commas, operators, etc.)
+        // This blocks payloads like "name; DROP TABLE users" or "name DESC, (SELECT ...)".
+        return (bool) preg_match('/^[A-Za-z0-9_]+$/', $column);
+    }
+
+    /**
+     * Optionally set an explicit allowlist of sortable columns.
+     *
+     * @param string[] $columns
+     * @return $this
+     */
+    public function setAllowedOrderColumns(array $columns): self
+    {
+        $this->allowedOrderColumns = array_values(array_unique($columns));
+
+        return $this;
+    }
+
+
+    /**
+     * Get new rows for the current query without model hydration.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getRows(): array
+    {
+        [$sql, $bindings] = $this->compileSelect();
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($bindings);
+
+        return $stmt->fetchAll();
     }
 
     protected function compileSelect(): array

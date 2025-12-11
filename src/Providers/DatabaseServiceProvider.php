@@ -10,6 +10,8 @@ use BareMetalPHP\Database\Model as BaseModel;
 use BareMetalPHP\Support\ServiceProvider;
 use BareMetalPHP\Support\Config;
 
+use BareMetalPHP\Database\EntityManager;
+
 class DatabaseServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -17,6 +19,12 @@ class DatabaseServiceProvider extends ServiceProvider
         // Register ConnectionManager
         $this->app->singleton(ConnectionManager::class, function () {
             return new ConnectionManager();
+        });
+
+        // Register EntityManager
+        $this->app->singleton(EntityManager::class, function () {
+            $manager = $this->app->make(ConnectionManager::class);
+            return new EntityManager($manager);
         });
 
         // Register default connection
