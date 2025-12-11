@@ -257,6 +257,7 @@ class TestUserForEager extends Model
 {
     protected static string $table = 'users';
     protected bool $timestamps = false;
+    protected array $fillable = ['name', 'email', 'age', 'status'];
 
     public function posts()
     {
@@ -272,6 +273,7 @@ class TestUserForEager extends Model
 class TestPostForEager extends Model
 {
     protected static string $table = 'posts';
+    protected array $fillable = ['user_id', 'title'];
     protected bool $timestamps = false;
 }
 

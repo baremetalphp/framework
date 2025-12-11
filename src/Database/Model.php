@@ -32,6 +32,20 @@ abstract class Model implements ArrayAccess
 
     protected static string $table;
 
+    /**
+     * Mass assignable attributes.
+     *
+     * @var string[] $fillable
+     */
+    protected array $fillable = [];
+
+    /**
+     * The attributes that aren't mass-assignable.
+     * By default, everything is guarded until explicitly allowed via $fillable.
+     *
+     * @var string[] $guarded
+     */
+    protected array $guarded = ['*'];
     protected bool $timestamps = true;
 
     protected array $attributes = [];
@@ -63,10 +77,54 @@ abstract class Model implements ArrayAccess
 
     public function __construct(array $attributes = [])
     {
-        $this->fill($attributes);
+        // If attributes come from database (have 'id'), set them directly without fillable check
         if (isset($attributes['id'])) {
             $this->exists = true;
+            foreach ($attributes as $key => $value) {
+                $this->setAttribute($key, $value);
+            }
+        } else {
+            $this->fill($attributes);
         }
+    }
+
+    /**
+     * Fill the model with an array of attributes, applying mass-assignment rules.
+     *
+     * @param array<string, mixed> $attributes
+     * @return $this
+     */
+    public function fill(array $attributes): static
+    {
+        foreach ($attributes as $key => $value) {
+            if (! $this->isFillable($key)) {
+                continue;
+            }
+
+            $this->setAttribute($key, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Determine if the given key is mass assignable.
+     * 
+     * @param string $key
+     * @return bool
+     */
+    protected function isFillable(string $key): bool
+    {
+        // Explicitly fillable
+        if (in_array($key, $this->fillable, true)) {
+            return true;
+        }
+
+        if (in_array('*', $this->guarded, true)) {
+            return false;
+        }
+
+        return ! in_array($key, $this->guarded, true);
     }
 
     // called once during bootstrap
@@ -405,17 +463,6 @@ abstract class Model implements ArrayAccess
     }
 
     /**
-     * Fill the model with an array of attributes
-     */
-    public function fill(array $attributes): static
-    {
-        foreach ($attributes as $key => $value) {
-            $this->setAttribute($key, $value);
-        }
-        return $this;
-    }
-
-    /**
      * Update the model with an array of attributes
      */
     public function update(array $attributes): bool
@@ -545,6 +592,11 @@ abstract class Model implements ArrayAccess
 
         [$connection, $driver, $pdo] = $this->getConnectionComponents();
         $preparedAttributes = $this->prepareAttributes($this->attributes, $driver);
+
+        // Prevent empty INSERT statements
+        if (empty($preparedAttributes)) {
+            return false;
+        }
 
         $columns = array_keys($preparedAttributes);
         $quotedColumns = $this->quoteIdentifiers($columns, $driver);

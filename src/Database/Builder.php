@@ -32,6 +32,22 @@ class Builder
      */
     protected array $orders = [];
 
+    /**
+     * Columns that are allowed to be used in ORDER BY clauses.
+     *
+     * If empty, a conservative identifier pattern will be used instead.
+     *
+     * @var string[]
+     */
+    protected array $allowedOrderColumns = [];
+
+    /**
+     * Columns that are safe to sort on via orderBy().
+     *
+     * @var string[] $sortable
+     */
+    protected array $sortable = [];
+
     protected ?int $limit = null;
     protected ?int $offset = null;
 
@@ -40,7 +56,7 @@ class Builder
         $this->pdo        = $pdo;
         $this->table      = $table;
         $this->modelClass = $modelClass;
-        
+
         // Store connection for driver access
         // If not provided, try to get it from a static connection if available
         if ($connection === null) {
@@ -64,7 +80,7 @@ class Builder
         $pdoProperty = $connection->getProperty('pdo');
         $pdoProperty->setAccessible(true);
         $pdoProperty->setValue($instance, $pdo);
-        
+
         return $instance;
     }
 
@@ -95,7 +111,7 @@ class Builder
 
     /**
      * Specify relationships to eager load.
-     * 
+     *
      * Example:
      *     User::query()->with('posts', 'profile')->get()
      *     User::query()->with(['posts', 'profile'])->get()
@@ -146,20 +162,44 @@ class Builder
 
     public function whereIn(string $column, array $values): self
     {
-        $this->wheres[] = ['AND', $column, 'IN', $values];
+        // empty values for IN, condition should match nothing but sql must still be valid
+        if (empty($values)) {
+            $this->wheres[] = ['AND', '1 = 0', 'RAW', null];
+
+            return $this;
+        }
+
+
+        $this->wheres[] = ['AND', $column, 'IN', array_values($values)];
         return $this;
     }
 
     public function whereNotIn(string $column, array $values): self
     {
-        $this->wheres[] = ['AND', $column, 'NOT IN', $values];
+        // Empty NOT IN matches everything (no restrictions).
+        if (empty($values)) {
+            // we can safely ignore it
+            return $this;
+        }
+        $this->wheres[] = ['AND', $column, 'NOT IN', array_values($values)];
         return $this;
     }
 
-    
+    public function whereRaw(string $sql, string $boolean = 'AND'): self
+    {
+        $this->wheres[] = [$boolean, $sql, 'RAW', null];
+
+        return $this;
+    }
+
+
 
     public function orderBy(string $column, string $direction = 'ASC'): self
     {
+        if (! $this->isAllowedOrderColumn($column)) {
+            throw new \InvalidArgumentException("Invalid order by column: {$column}");
+        }
+
         $direction = strtoupper($direction);
         if (!in_array($direction, ['ASC', 'DESC'], true)) {
             $direction = 'ASC';
@@ -181,11 +221,58 @@ class Builder
         return $this;
     }
 
+    /**
+     * Determine if the given column is allowed in ORDER BY clauses.
+     *
+     * @param string $column
+     * @return bool
+     */
+    protected function isAllowedOrderColumn(string $column): bool
+    {
+        // If an explicit allowlist has been set, enforce it strictly.
+        if (!empty($this->allowedOrderColumns)) {
+            return in_array($column, $this->allowedOrderColumns, true);
+        }
+
+        // Fallback: allow only simple identifiers (no spaces, commas, operators, etc.)
+        // This blocks payloads like "name; DROP TABLE users" or "name DESC, (SELECT ...)".
+        return (bool) preg_match('/^[A-Za-z0-9_]+$/', $column);
+    }
+
+    /**
+     * Optionally set an explicit allowlist of sortable columns.
+     *
+     * @param string[] $columns
+     * @return $this
+     */
+    public function setAllowedOrderColumns(array $columns): self
+    {
+        $this->allowedOrderColumns = array_values(array_unique($columns));
+
+        return $this;
+    }
+
+
+    /**
+     * Get new rows for the current query without model hydration.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getRows(): array
+    {
+        [$sql, $bindings] = $this->compileSelect();
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($bindings);
+
+        return $stmt->fetchAll();
+    }
+
     protected function compileSelect(): array
     {
         $driver = $this->connection->getDriver();
         $quotedTable = $driver->quoteIdentifier($this->table);
-        
+
         $sql      = 'SELECT * FROM ' . $quotedTable;
         $bindings = [];
 
@@ -257,5 +344,5 @@ class Builder
         return $sql;
     }
 
-    
+
 }

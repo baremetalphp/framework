@@ -41,7 +41,8 @@ class Auth
      */
     public static function id(): ?int
     {
-        return Session::get(self::SESSION_KEY);
+        $userId = Session::get(self::SESSION_KEY);
+        return $userId ? (int)$userId : null;
     }
 
     /**
@@ -50,7 +51,8 @@ class Auth
     public static function login(User $user): void
     {
         Session::regenerate();
-        Session::set(self::SESSION_KEY, (int)$user->getAttribute('id'));
+        $userId = $user->id ?? $user->getAttribute('id');
+        Session::set(self::SESSION_KEY, $userId ? (int)$userId : null);
     }
 
     /**

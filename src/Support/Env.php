@@ -7,6 +7,11 @@ namespace BareMetalPHP\Support;
 final class Env
 {
     /**
+     * Track if environment has been loaded (for testing purposes)
+     */
+    protected static bool $loaded = false;
+
+    /**
      * Load environment variables from a file.
      * 
      * @param string $path Path to .env file

@@ -13,6 +13,7 @@ use Tests\TestCase;
 class User extends Model
 {
     protected static string $table = 'users';
+    protected array $fillable = ['name', 'email', 'password'];
 }
 
 class AuthTest extends TestCase

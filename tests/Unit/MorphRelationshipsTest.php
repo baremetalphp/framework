@@ -208,22 +208,26 @@ class Post extends Model
 {
     protected static string $table = 'posts';
     protected bool $timestamps = false;
+    protected array $fillable = ['title', 'commentable_type', 'commentable_id'];
 }
 
 class Video extends Model
 {
     protected static string $table = 'videos';
     protected bool $timestamps = false;
+    protected array $fillable = ['title', 'commentable_type', 'commentable_id'];
 }
 
 class Comment extends Model
 {
     protected static string $table = 'comments';
     protected bool $timestamps = false;
+    protected array $fillable = ['body', 'commentable_type', 'commentable_id'];
 }
 
 class Image extends Model
 {
     protected static string $table = 'images';
     protected bool $timestamps = false;
+    protected array $fillable = ['url', 'imageable_type', 'imageable_id'];
 }

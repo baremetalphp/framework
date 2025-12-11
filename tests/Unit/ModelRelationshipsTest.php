@@ -169,6 +169,7 @@ class UserWithRelations extends Model
     protected static string $table = 'users';
 
     protected bool $timestamps = false;
+    protected array $fillable = ['name', 'email'];
 
     public function posts()
     {
@@ -186,6 +187,7 @@ class PostForRelations extends Model
     protected static string $table = 'posts';
 
     protected bool $timestamps = false;
+    protected array $fillable = ['user_id', 'title', 'body'];
 
     public function user()
     {
@@ -196,6 +198,7 @@ class PostForRelations extends Model
 class ProfileForRelations extends Model
 {
     protected static string $table = 'profiles';
+    protected array $fillable = ['user_id', 'bio'];
 
     protected bool $timestamps = false;
     public function user()

@@ -1299,3 +1299,678 @@ Test code or tested code printed unexpected output: No migration files found.
 
 ERRORS!
 Tests: 510, Assertions: 921, Errors: 63, Failures: 8, PHPUnit Notices: 10, Skipped: 4, Risky: 14.
+PHPUnit 12.5.3 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.15
+Configuration: /Users/elliotanderson/php/baremetalphp-src/phpunit.xml
+
+...FFFF...EEEEEEEEEEE...EEEE........EEEEEEEEEEEEEEEE...........  63 / 510 ( 12%)
+.....................................................SSS.....S. 126 / 510 ( 24%)
+............................................................... 189 / 510 ( 37%)
+................................................R.............. 252 / 510 ( 49%)
+..........EEEEEEEEEEEEEEEEEEEF.EF..Migration created: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_migration_test_693b035680851/database/migrations/20251211174558_test_migration.php
+RMigration created: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_migration_test_693b035680b4e/database/migrations/20251211174558_test_migration.php
+R.Controller created: app/Http/Controllers/TestController.php
+R.......FFF.............. 315 / 510 ( 61%)
+..........N.................................................... 378 / 510 ( 74%)
+............................................................... 441 / 510 ( 86%)
+WebSocket broadcast: failed to encode payload
+R..........................................Installing Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_693b035690358
+Created go.mod with module name: baremetal_test_693b035690358
+Created go_appserver.json
+Created cmd/server/main.go
+Created cmd/server/config.go
+Created server/server.go
+Created server/worker.go
+Created server/pool.go
+Created server/payload.go
+Created php/worker.php
+Created php/bridge.php
+Created php/bootstrap_app.php
+Go app server scaffolding complete.
+Next steps:
+  1. Run: go mod tidy
+  2. Run: go run ./cmd/server
+  3. Hit http://localhost:8080
+R.Installing Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_693b035691f79
+Created go.mod with module name: baremetal_test_693b035691f79
+Created go_appserver.json
+Created cmd/server/main.go
+Created cmd/server/config.go
+Created server/server.go
+Created server/worker.go
+Created server/pool.go
+Created server/payload.go
+Created php/worker.php
+Created php/bridge.php
+Created php/bootstrap_app.php
+Go app server scaffolding complete.
+Next steps:
+  1. Run: go mod tidy
+  2. Run: go run ./cmd/server
+  3. Hit http://localhost:8080
+RInstalling Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_693b03569294c
+Created go.mod with module name: baremetal_test_693b03569294c
+Created go_appserver.json
+Created cmd/server/main.go
+Created cmd/server/config.go
+Created server/server.go
+Created server/worker.go
+Created server/pool.go
+Created server/payload.go
+Created php/worker.php
+Created php/bridge.php
+Created php/bootstrap_app.php
+Go app server scaffolding complete.
+Next steps:
+  1. Run: go mod tidy
+  2. Run: go run ./cmd/server
+  3. Hit http://localhost:8080
+RInstalling Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_693b035693355
+Created go.mod with module name: baremetal_test_693b035693355
+Created go_appserver.json
+Created cmd/server/main.go
+Created cmd/server/config.go
+Created server/server.go
+Created server/worker.go
+Created server/pool.go
+Created server/payload.go
+Created php/worker.php
+Created php/bridge.php
+Created php/bootstrap_app.php
+Go app server scaffolding complete.
+Next steps:
+  1. Run: go mod tidy
+  2. Run: go run ./cmd/server
+  3. Hit http://localhost:8080
+R.NNNNNo migration files found.
+RNNNN..... 504 / 510 ( 98%)
+....E.                                                          510 / 510 (100%)
+
+Time: 00:00.944, Memory: 22.00 MB
+
+There were 52 errors:
+
+1) Tests\Unit\Database\BelongsToManyTest::testGetReturnsCollection
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BelongsToManyTest.php:48
+
+2) Tests\Unit\Database\BelongsToManyTest::testAttachSingleId
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BelongsToManyTest.php:92
+
+3) Tests\Unit\Database\BelongsToManyTest::testAttachMultipleIds
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BelongsToManyTest.php:115
+
+4) Tests\Unit\Database\BelongsToManyTest::testAttachWithPivotAttributes
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BelongsToManyTest.php:139
+
+5) Tests\Unit\Database\BelongsToManyTest::testAttachUpdatesExistingPivotAttributes
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BelongsToManyTest.php:162
+
+6) Tests\Unit\Database\BelongsToManyTest::testDetachSingleId
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BelongsToManyTest.php:189
+
+7) Tests\Unit\Database\BelongsToManyTest::testDetachAll
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BelongsToManyTest.php:216
+
+8) Tests\Unit\Database\BelongsToManyTest::testSync
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BelongsToManyTest.php:261
+
+9) Tests\Unit\Database\BelongsToManyTest::testSyncWithoutDetaching
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BelongsToManyTest.php:306
+
+10) Tests\Unit\Database\BelongsToManyTest::testGetPivotAttributes
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BelongsToManyTest.php:335
+
+11) Tests\Unit\Database\BelongsToManyTest::testGetPivotAttributesReturnsEmptyWhenNotFound
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BelongsToManyTest.php:362
+
+12) Tests\Unit\Database\BuilderAdvancedTest::testWithEagerLoading
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BuilderAdvancedTest.php:81
+
+13) Tests\Unit\Database\BuilderAdvancedTest::testWithArraySyntax
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BuilderAdvancedTest.php:121
+
+14) Tests\Unit\Database\BuilderAdvancedTest::testWithMultipleRelations
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BuilderAdvancedTest.php:100
+
+15) Tests\Unit\Database\BuilderAdvancedTest::testFirstWithModel
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Database/BuilderAdvancedTest.php:187
+
+16) Tests\Unit\DatabaseRelationsTest::testHasManyGetResultsReturnsCollection
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:97
+
+17) Tests\Unit\DatabaseRelationsTest::testHasManyAddEagerConstraints
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:122
+
+18) Tests\Unit\DatabaseRelationsTest::testHasManyGetEager
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:135
+
+19) Tests\Unit\DatabaseRelationsTest::testHasManyGetEagerWithEmptyKeys
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:152
+
+20) Tests\Unit\DatabaseRelationsTest::testBelongsToAddEagerConstraints
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:209
+
+21) Tests\Unit\DatabaseRelationsTest::testBelongsToGetEager
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:222
+
+22) Tests\Unit\DatabaseRelationsTest::testBelongsToGetEagerWithEmptyKeys
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:238
+
+23) Tests\Unit\DatabaseRelationsTest::testBelongsToMatch
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:249
+
+24) Tests\Unit\DatabaseRelationsTest::testHasOneGetResultsReturnsModel
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:266
+
+25) Tests\Unit\DatabaseRelationsTest::testHasOneAddEagerConstraints
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:289
+
+26) Tests\Unit\DatabaseRelationsTest::testHasOneGetEager
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:302
+
+27) Tests\Unit\DatabaseRelationsTest::testHasManyMatch
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:163
+
+28) Tests\Unit\DatabaseRelationsTest::testBelongsToGetResultsReturnsModel
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:186
+
+29) Tests\Unit\DatabaseRelationsTest::testHasOneGetEagerWithEmptyKeys
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:318
+
+30) Tests\Unit\DatabaseRelationsTest::testHasOneMatch
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:329
+
+31) Tests\Unit\DatabaseRelationsTest::testHasOneMatchWithMissingProfile
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/DatabaseRelationsTest.php:346
+
+32) Tests\Unit\ModelRelationshipsTest::test_has_many_returns_collection_of_related_models
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelRelationshipsTest.php:50
+
+33) Tests\Unit\ModelRelationshipsTest::test_has_many_returns_empty_collection_when_no_related_rows
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelRelationshipsTest.php:81
+
+34) Tests\Unit\ModelRelationshipsTest::test_has_one_returns_single_related_model_via_method_and_property
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelRelationshipsTest.php:94
+
+35) Tests\Unit\ModelRelationshipsTest::test_has_one_method_returns_null_when_no_related_model
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelRelationshipsTest.php:117
+
+36) Tests\Unit\ModelRelationshipsTest::test_belongs_to_returns_parent_model
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelRelationshipsTest.php:128
+
+37) Tests\Unit\ModelRelationshipsTest::test_belongs_to_method_returns_null_when_foreign_key_is_null
+PDOException: SQLSTATE[HY000]: General error: 1 near ")": syntax error
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:603
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelRelationshipsTest.php:158
+
+38) Tests\Unit\ModelTest::testCanSaveModel
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:44
+
+39) Tests\Unit\ModelTest::testCanFindModel
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:54
+
+40) Tests\Unit\ModelTest::testCanUpdateModel
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:65
+
+41) Tests\Unit\ModelTest::testCanDeleteModel
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:76
+
+42) Tests\Unit\ModelTest::testCanUseStaticCreate
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:87
+
+43) Tests\Unit\ModelTest::testCanUseFirstOrCreate
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:414
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:99
+
+44) Tests\Unit\ModelTest::testCanUseUpdateOrCreate
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:414
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:422
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:117
+
+45) Tests\Unit\ModelTest::testCanUseFindOrFail
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:134
+
+46) Tests\Unit\ModelTest::testCanRefreshModel
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:154
+
+47) Tests\Unit\ModelTest::testCanGetFreshInstance
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:164
+
+48) Tests\Unit\ModelTest::testCanQueryModels
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:175
+
+49) Tests\Unit\ModelTest::testCanGetAllModels
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:186
+
+50) Tests\Unit\ModelTest::testCanUseAccessors
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:197
+
+51) Tests\Unit\ModelTest::testCanConvertToArray
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:214
+
+52) Tests\Integration\FullStackTest::testFullRequestResponseCycle
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: users.name
+
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:604
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:457
+/Users/elliotanderson/php/baremetalphp-src/src/Database/Model.php:385
+/Users/elliotanderson/php/baremetalphp-src/tests/Integration/FullStackTest.php:51
+/Users/elliotanderson/php/baremetalphp-src/vendor/bin/phpunit:122
+
+--
+
+There were 9 failures:
+
+1) Tests\Unit\AuthTest::testLoginSetsUserIdInSession
+Failed asserting that null is identical to 1.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/AuthTest.php:65
+
+2) Tests\Unit\AuthTest::testAttemptLogsInUserWithValidCredentials
+Failed asserting that null is not null.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/AuthTest.php:124
+
+3) Tests\Unit\AuthTest::testAttemptTrimsEmailWhitespace
+Failed asserting that null is not null.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/AuthTest.php:152
+
+4) Tests\Unit\AuthTest::testAttemptIsCaseInsensitiveForEmail
+Failed asserting that null is not null.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/AuthTest.php:139
+
+5) Tests\Unit\ModelTest::testCanFillAttributes
+Failed asserting that null matches expected 'John'.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:148
+
+6) Tests\Unit\ModelTest::testCanCreateModel
+Failed asserting that null matches expected 'John'.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/ModelTest.php:37
+
+7) Tests\Unit\MorphRelationshipsTest::testMorphManyUsesMorphClass
+Failed asserting that null is identical to 'Post comment'.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/MorphRelationshipsTest.php:203
+
+8) Tests\Unit\MorphRelationshipsTest::testMorphToReturnsRelatedModel
+Failed asserting that null is identical to 1.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/MorphRelationshipsTest.php:102
+
+9) Tests\Unit\MorphRelationshipsTest::testMorphOneReturnsSingleRelatedModel
+Failed asserting that null is identical to 1.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/MorphRelationshipsTest.php:159
+
+--
+
+There were 10 risky tests:
+
+1) Tests\Unit\Frontend\SPAHelperTest::testRenderWithCustomLayout
+This test did not perform any assertions
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/Frontend/SPAHelperTest.php:89
+
+2) Tests\Unit\MakeMigrationCommandTest::testMigrationHasTimestamp
+Test code or tested code printed unexpected output: Migration created: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_migration_test_693b035680851/database/migrations/20251211174558_test_migration.php
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/MakeMigrationCommandTest.php:89
+
+3) Tests\Unit\MakeMigrationCommandTest::testCreatesMigrationsDirectory
+Test code or tested code printed unexpected output: Migration created: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_migration_test_693b035680b4e/database/migrations/20251211174558_test_migration.php
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/MakeMigrationCommandTest.php:102
+
+4) Tests\Unit\MakeControllerCommandTest::testCreatesDirectoryStructure
+Test code or tested code printed unexpected output: Controller created: app/Http/Controllers/TestController.php
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/MakeControllerCommandTest.php:79
+
+5) Tests\Unit\WebSocket\WebSocketTest::testBroadcastHandlesJsonEncodeFailure
+Test code or tested code printed unexpected output: WebSocket broadcast: failed to encode payload
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Unit/WebSocket/WebSocketTest.php:77
+
+6) Tests\Feature\InstallGoAppServerCommandTest::testGoConfigFileReflectsAppServerConfig
+Test code or tested code printed unexpected output: Installing Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_693b035690358
+Created go.mod with module name: baremetal_test_693b035690358
+Created go_appserver.json
+Created cmd/server/main.go
+Created cmd/server/config.go
+Created server/server.go
+Created server/worker.go
+Created server/pool.go
+Created server/payload.go
+Created php/worker.php
+Created php/bridge.php
+Created php/bootstrap_app.php
+Go app server scaffolding complete.
+Next steps:
+  1. Run: go mod tidy
+  2. Run: go run ./cmd/server
+  3. Hit http://localhost:8080
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:260
+
+7) Tests\Feature\InstallGoAppServerCommandTest::testGoFilesContainCorrectContent
+Test code or tested code printed unexpected output: Installing Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_693b035691f79
+Created go.mod with module name: baremetal_test_693b035691f79
+Created go_appserver.json
+Created cmd/server/main.go
+Created cmd/server/config.go
+Created server/server.go
+Created server/worker.go
+Created server/pool.go
+Created server/payload.go
+Created php/worker.php
+Created php/bridge.php
+Created php/bootstrap_app.php
+Go app server scaffolding complete.
+Next steps:
+  1. Run: go mod tidy
+  2. Run: go run ./cmd/server
+  3. Hit http://localhost:8080
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:142
+
+8) Tests\Feature\InstallGoAppServerCommandTest::testGoModUsesCorrectModuleName
+Test code or tested code printed unexpected output: Installing Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_693b03569294c
+Created go.mod with module name: baremetal_test_693b03569294c
+Created go_appserver.json
+Created cmd/server/main.go
+Created cmd/server/config.go
+Created server/server.go
+Created server/worker.go
+Created server/pool.go
+Created server/payload.go
+Created php/worker.php
+Created php/bridge.php
+Created php/bootstrap_app.php
+Go app server scaffolding complete.
+Next steps:
+  1. Run: go mod tidy
+  2. Run: go run ./cmd/server
+  3. Hit http://localhost:8080
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:317
+
+9) Tests\Feature\InstallGoAppServerCommandTest::testPhpFilesContainCorrectContent
+Test code or tested code printed unexpected output: Installing Go app server into: /private/var/folders/bk/l00_jcf56y92rzhh262xnxn00000gn/T/baremetal_test_693b035693355
+Created go.mod with module name: baremetal_test_693b035693355
+Created go_appserver.json
+Created cmd/server/main.go
+Created cmd/server/config.go
+Created server/server.go
+Created server/worker.go
+Created server/pool.go
+Created server/payload.go
+Created php/worker.php
+Created php/bridge.php
+Created php/bootstrap_app.php
+Go app server scaffolding complete.
+Next steps:
+  1. Run: go mod tidy
+  2. Run: go run ./cmd/server
+  3. Hit http://localhost:8080
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/InstallGoAppServerCommandTest.php:233
+
+10) Tests\Feature\MigrateCommandTest::testCreatesMigrationsTable
+Test code or tested code printed unexpected output: No migration files found.
+
+/Users/elliotanderson/php/baremetalphp-src/tests/Feature/MigrateCommandTest.php:158
+
+ERRORS!
+Tests: 510, Assertions: 1005, Errors: 52, Failures: 9, PHPUnit Notices: 10, Skipped: 4, Risky: 10.

@@ -87,7 +87,7 @@ class SqlBuilderTest extends TestCase
         $clause = SqlBuilder::buildWhereClause($wheres, $this->driver, $bindings);
         
         $this->assertStringContainsString('IN', $clause);
-        $this->assertStringContainsString('(?,?,?)', $clause);
+        $this->assertStringContainsString('(?, ?, ?)', $clause);
         $this->assertCount(3, $bindings);
         $this->assertSame([1, 2, 3], $bindings);
     }
@@ -102,7 +102,7 @@ class SqlBuilderTest extends TestCase
         $clause = SqlBuilder::buildWhereClause($wheres, $this->driver, $bindings);
         
         $this->assertStringContainsString('NOT IN', $clause);
-        $this->assertStringContainsString('(?,?,?)', $clause);
+        $this->assertStringContainsString('(?, ?, ?)', $clause);
         $this->assertCount(3, $bindings);
     }
 

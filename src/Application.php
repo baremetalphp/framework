@@ -181,12 +181,30 @@ class Application
 
         $type = $param->getType();
 
-        // If no type or built-in type without default, we can't resolve it
-        if (! $type || $type->isBuiltin()) {
-            throw new \RuntimeException("Cannot resolve parameter {$param->getName()} of class " . ($param->getDeclaringClass() ? $param->getDeclaringClass()->getName() : 'unknown'));
+        // Named, non-union type
+        if ($type instanceof \ReflectionNamedType) {
+            // class / interface type -> let container build
+            if (! $type->isBuiltin()) {
+                return $this->make($type->getName());
+            }
+
+            // Built-in types (lenient for array/iterable)
+            $builtin = $type->getName();
+
+            if ($builtin === 'array' || $builtin === 'iterable') {
+                return [];
+            }
         }
 
-        return $this->make($type->getName());
+        $owner = $param->getDeclaringClass()->getName() ?? 'unknown';
+
+        throw new \RuntimeException(
+            sprintf(
+                'Cannot resolve parameter $%s of %s::__construct(). Either give it a default value or bind it explicitly to the container.',
+                $param->getName(),
+                $owner
+            )
+        );
     }
 
     public function registerProviders(array $providers): void

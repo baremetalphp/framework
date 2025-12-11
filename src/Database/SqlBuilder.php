@@ -24,44 +24,72 @@ class SqlBuilder
         }
 
         $parts = [];
+
         foreach ($wheres as $index => [$boolean, $column, $operator, $value]) {
+            $boolean  = strtoupper($boolean);
+            $operator = strtoupper($operator);
+
+            // First condition uses WHERE instead of AND/OR
+            $prefix = $index === 0 ? 'WHERE' : $boolean;
+
+            // RAW clauses are passed through untouched
+            if ($operator === 'RAW') {
+                $parts[] = $prefix . ' ' . $column;
+                continue;
+            }
+
             $quotedColumn = $driver->quoteIdentifier($column);
 
-            // Handle NULL values
+            // Handle IN / NOT IN explicitly (including empty arrays)
+            if ($operator === 'IN' || $operator === 'NOT IN') {
+                $values = (array) $value;
+
+                if (empty($values)) {
+                    // IN () => always false, NOT IN () => always true
+                    $clause = $operator === 'IN' ? '1 = 0' : '1 = 1';
+                    $parts[] = $prefix . ' ' . $clause;
+                    continue;
+                }
+
+                $placeholders = implode(', ', array_fill(0, count($values), '?'));
+                $clause = sprintf(
+                    '%s %s (%s)',
+                    $quotedColumn,
+                    $operator,
+                    $placeholders
+                );
+
+                foreach ($values as $v) {
+                    $bindings[] = $v;
+                }
+
+                $parts[] = $prefix . ' ' . $clause;
+                continue;
+            }
+
+            // Handle NULL values for normal comparison operators
             if ($value === null) {
-                if (strtoupper($operator) === '=' || strtoupper($operator) === 'IS') {
+                if (in_array($operator, ['=', 'IS'], true)) {
                     $clause = $quotedColumn . ' IS NULL';
-                } elseif (strtoupper($operator) === '!=' || strtoupper($operator) === '<>' || strtoupper($operator) === 'IS NOT') {
+                } elseif (in_array($operator, ['!=', '<>', 'IS NOT'], true)) {
                     $clause = $quotedColumn . ' IS NOT NULL';
                 } else {
                     $clause = $quotedColumn . ' ' . $operator . ' NULL';
                 }
-                // No binding needed for NULL
-            } else {
-                $preparedValue = $driver->prepareValue($value);
 
-                if (strtoupper($operator) === 'IN' && is_array($preparedValue)) {
-                    $placeholders = implode(',', array_fill(0, count($preparedValue), '?'));
-                    $clause = $quotedColumn . ' IN (' . $placeholders . ')';
-                    $bindings = array_merge($bindings, $preparedValue);
-                } elseif (strtoupper($operator) === 'NOT IN' && is_array($preparedValue)) {
-                    $placeholders = implode(',', array_fill(0, count($preparedValue), '?'));
-                    $clause = $quotedColumn . ' NOT IN (' . $placeholders . ')';
-                    $bindings = array_merge($bindings, $preparedValue);
-                } else {
-                    $clause = $quotedColumn . ' ' . $operator . ' ?';
-                    $bindings[] = $preparedValue;
-                }
+                // No binding for NULL
+                $parts[] = $prefix . ' ' . $clause;
+                continue;
             }
 
-            if ($index === 0) {
-                $parts[] = $clause;
-            } else {
-                $parts[] = $boolean . ' ' . $clause;
-            }
+            // Standard [column operator ?] clause
+            $clause = $quotedColumn . ' ' . $operator . ' ?';
+            $bindings[] = $value;
+
+            $parts[] = $prefix . ' ' . $clause;
         }
 
-        return ' WHERE ' . implode(' ', $parts);
+        return ' ' . implode(' ', $parts);
     }
 
     /**
